@@ -1,0 +1,77 @@
+﻿using System.Collections.Generic;
+
+namespace CooperativeOffice.Models
+{
+    /// <summary>
+    /// 请假类型数据模型
+    /// </summary>
+    public class OffWorkTypeModels
+    {
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public string code { get; set; }
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string name { get; set; }
+    }
+    /// <summary>
+    /// 请假内容数据模型
+    /// </summary>
+    public class OffWorkModels {
+        /// <summary>
+        /// 企业编号
+        /// </summary>
+        public string orgeuid { get; set; }
+        /// <summary>
+        /// 请假人编号
+        /// </summary>
+        public string euid { get; set; }
+        /// <summary>
+        /// 请假人姓名
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string title { get; set; }
+        /// <summary>
+        /// 审批编号
+        /// </summary>
+        public string approvalcode { get; set; }
+        /// <summary>
+        /// 请假类型
+        /// </summary>
+        public string leavetype { get; set; }
+        /// <summary>
+        /// 请假开始日期
+        /// </summary>
+        public string leavestarttime { get; set; }
+        /// <summary>
+        /// 请假结束日期
+        /// </summary>
+        public string leaveendtime { get; set; }
+        /// <summary>
+        /// 请假时长
+        /// </summary>
+        public string leavehours { get; set; }
+        /// <summary>
+        /// 请假原因
+        /// </summary>
+        public string leavereason { get; set; }
+        /// <summary>
+        /// 审批人
+        /// </summary>
+        public List<ApprovalModels> approvalList { get; set; }
+        /// <summary>
+        /// 抄送人
+        /// </summary>
+        public List<CopyToModels> copyto { get; set; }
+        /// <summary>
+        /// 图片
+        /// </summary>
+        public List<ImageModels> imgs { get; set; }
+    }
+    
+}

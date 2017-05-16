@@ -1,0 +1,189 @@
+﻿
+@{
+    Layout = null;
+    ViewBag.Tilte = "审批";
+}
+
+<!DOCTYPE html>
+
+<html  manifest="~/app.manifest">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Tilte</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/customStyle.css" />
+    <script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/angular.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/platform.js"></script>
+    <script type="text/javascript">
+        if (typeof (CallClient) != "undefined") {
+            CallClient.hideTopTitle();
+        }
+    </script>
+</head>
+<body style="background-color:#f0eff4;" ng-app="approval" ng-controller="appController">
+    <input type="hidden" id="createrid" name="createrid" value="" />
+    <input type="hidden" id="createname" name="createname" value="" />
+    <input type="hidden" id="phonenum" name="phonenum" value="" />
+    <input type="hidden" id="devicetype" name="devicetype" value="" />
+    <input type="hidden" id="other" name="other" value="" />
+    <input type="hidden" id="callcenterid" name="callcenterid" value="" />
+    <div class="container" style="padding-left:0; padding-right:0;">
+        <div class="row  navbar-inverse">
+            <div class="col-lg-12" style="padding-right:0; padding-left:0 !important;">
+                <a id="goback" href='javascript:void(0)' onclick="javascript: CallClient.back()">
+                    <img src="~/Images/返回.png" style="float: left;width: 13px; height: 24px;margin-left: 18px;margin-top: 12px;" />
+                </a>
+                <span class="custom_title">@ViewBag.Tilte</span>
+            </div>
+        </div>
+        <div class="row" style="margin-left:0 !important; margin-right:0 !important;">
+            <div class="col-xs-4" style="text-align:center;padding:35px 0 0; background-color:#fff;">
+                <a href='@Url.Action("ApprovalWithMe")'>
+                    <img src="~/Images/待我审批的.png" alt="待我审批的" style="width:40px;" />
+                    <p class="custom_title14">待我审批的</p>
+                    <span id="un_p_count" class="badge" style="position: absolute;top: 10px;right: 30px;background-color: #f00 !important; z-index:9999;" ng-bind="items.unprocesscount" ng-show="items.unprocesscount > 0"></span>
+                </a>
+            </div>
+            <div class="col-xs-4" style="text-align:center;padding:35px 0 0;  background-color:#fff;">
+                <a href='@Url.Action("StartedWithMe")'>
+                    <img src="~/Images/我发起的.png" alt="我发起的" style="width:40px; height:40px;" />
+                    <p class="custom_title14">我发起的</p>
+                </a>
+            </div>
+            <div class="col-xs-4" style="text-align:center;padding:35px 0 0;  background-color:#fff;">
+                <a href='@Url.Action("CopyForMe")'>
+                    <img src="~/Images/抄送我的.png" alt="抄送我的" style="width:40px;" />
+                    <p class="custom_title14">抄送我的</p>
+                    <span id="un_p_count" class="badge" style="position: absolute;top: 10px;right: 30px;background-color: #f00 !important; z-index:9999;" ng-bind="items.copyunreadcount" ng-show="items.copyunreadcount > 0"></span>
+                </a>
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px; margin-left:0 !important; margin-right:0 !important;">
+            <div class="col-xs-4" style="text-align:center; padding:28px 0 0 0; border:solid 1px #eeeeee; background-color:#fff;">
+                <a href='@Url.Action("Index","OffWork")'>
+                    <img src="~/Images/请假.png" alt="请假" style="width:40px;" />
+                    <p class="custom_title12">请假</p>
+                </a>
+            </div>
+            <div class="col-xs-4" style="text-align:center; padding:28px 0 0 0; border:solid 1px #eeeeee; background-color:#fff;">
+                <a href='@Url.Action("Index","Expense")'>
+                    <img src="~/Images/报销.png" alt="报销" style="width:40px;" />
+                    <p class="custom_title12">报销</p>
+                </a>
+            </div>
+            <div class="col-xs-4" style="text-align:center; padding:28px 0 0 0; border:solid 1px #eeeeee; background-color:#fff;">
+                <a href='@Url.Action("Index","Trip")'>
+                    <img src="~/Images/差旅服务.png" alt="出差" style="width:40px;" />
+                    <p class="custom_title12">出差</p>
+                </a>
+            </div>
+        </div>
+        <div class="row" style="margin-left:0 !important; margin-right:0 !important;">
+            <div class="col-xs-4" style="text-align:center; padding:28px 0 0 0; border:solid 1px #eeeeee; background-color:#fff;">
+                <a href='@Url.Action("Index","Consult")'>
+                    <img src="~/Images/请示.png" alt="请示" style="width:40px;" />
+                    <p class="custom_title12">请示</p>
+                </a>
+            </div>
+            <div class="col-xs-4" style="text-align:center; padding:28px 0 0 0; border:solid 1px #eeeeee; background-color:#fff;">
+                <a href='@Url.Action("Index","Away")'>
+                    <img src="~/Images/外出.png" alt="外出" style="width:40px;" />
+                    <p class="custom_title12">外出</p>
+                </a>
+            </div>
+            <div class="col-xs-4" style="text-align:center; padding:28px 0 0 0; border:solid 1px #eeeeee; background-color:#fff;">
+                <a href='@Url.Action("Index","Borrowing")'>
+                    <img src="~/Images/借款.png" alt="借款" style="width:40px;" />
+                    <p class="custom_title12">借款</p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        angular.module("approval", []).controller("appController", ['$scope', '$filter', 'BusinessService', function ($scope, $filter, BusinessService) {
+            if (location.href.indexOf("?") != -1) {
+                var createrid = "";
+                var creatername = "";
+                var callcenterid = "";
+                var phonenum = "";
+                var devicetype = "";
+                var other = "";
+                var param = location.href.substr(location.href.indexOf("?") + 1);
+                param = decodeURIComponent(param);
+                if (param != null && param != "" && param != undefined) {
+                    var jsonobj = param.split("&");
+                    for (var i = 0; i < jsonobj.length; i++) {
+                        var temp = jsonobj[i].split("=");
+                        switch (temp[0]) {
+                            case "TermType":
+                                devicetype = temp[1];
+                                break;
+                            case "OrgEUID":
+                                callcenterid = temp[1];
+                                break;
+                            case "EmpName":
+                                creatername = temp[1];
+                                break;
+                            case "EmpEUID":
+                                createrid = temp[1];
+                                break;
+                            case "PhoneNumber":
+                                phonenum = temp[1];
+                                break;
+                            default:
+                                other = temp[1];
+                        }
+                    }
+                    window.sessionStorage.setItem("userinfor", JSON.stringify({ createrid: createrid, creatername: creatername, callcenterid: callcenterid, phonenum: phonenum, devicetype: devicetype, other: other }));
+                }
+            }
+            //window.sessionStorage.setItem("userinfor", JSON.stringify({ createrid: '11800015006', creatername: '魏林', callcenterid: '1180001', phonenum: '13261453214', devicetype: 1, other: "" }));
+            /***************获取用户信息*****************/
+            var param = sessionStorage.getItem("userinfor");
+            if (param != null && param != "" && param != undefined) {
+                try {
+                    var itemArr = JSON.parse(param);
+                    $("#createrid").val(itemArr.createrid);
+                    $("#createname").val(itemArr.creatername);
+                    $("#phonenum").val(itemArr.phonenum);
+                    $("#devicetype").val(itemArr.devicetype);
+                    $("#other").val(itemArr.other);
+                    $("#callcenterid").val(itemArr.callcenterid);
+                    var postData = {
+                        orgid: $("#callcenterid").val(),
+                        euid: $("#createrid").val()
+                    }
+                    BusinessService.list(postData).success(function (response) {
+                        $scope.items = response;
+                    });
+                } catch (e) {
+                    console.error("未能正确解释用户信息。");
+                }
+            }
+            /****************获取用户信息结束***********/
+            window.setInterval(function () {
+                $("#createrid").val(itemArr.createrid);
+                $("#callcenterid").val(itemArr.callcenterid);
+                var postData = {
+                    orgid: $("#callcenterid").val(),
+                    euid: $("#createrid").val()
+                }
+                BusinessService.list(postData).success(function (response) {
+                    $scope.items = response;
+                });
+            }, 5000);
+        }]).factory("BusinessService", ['$http', function ($http) {
+            var list = function (postData) {
+                return $http.post('@Url.Action("GetCount", "Approval")', postData);
+            }
+            return {
+                list: function (postData) {
+                    return list(postData);
+                }
+            }
+        }]);
+    </script>
+</body>
+</html>
