@@ -1,0 +1,689 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Configuration;
+using Oracle.ManagedDataAccess.Client;
+using Dapper;
+using NLog;
+using CooperativeOffice.Models;
+using Newtonsoft.Json;
+
+namespace CooperativeOffice.Entity
+{
+    public class DBopreator
+    {
+        /// <summary>
+        /// 数据库连接对象
+        /// </summary>
+        protected OracleConnection _conn = new OracleConnection();
+        /// <summary>
+        /// 数据库操作指令
+        /// </summary>
+        protected OracleCommand _com = new OracleCommand();
+        /// <summary>
+        /// 日志实例
+        /// </summary>
+        protected Logger log = LogManager.GetCurrentClassLogger();
+        /// <summary>
+        /// 数据库操作类
+        /// </summary>
+        public DBopreator()
+        {
+            try
+            {
+                var conString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
+                _conn.ConnectionString = conString;
+                _com.Connection = _conn;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, "获取配置文件参数时发生异常。");
+            }
+        }
+        /// <summary>
+        /// 数据库操作类
+        /// </summary>
+        /// <param name="Conection">oracle连接对象</param>
+        public DBopreator(OracleConnection Conection)
+        {
+            _conn = Conection;
+            _com.Connection = _conn;
+        }
+        /// <summary>
+        /// 获取企业的联系人列表
+        /// </summary>
+        /// <param name="orgid">企业编号</param>
+        /// <param name="key">关键字</param>
+        /// <returns></returns>
+        public List<EmployeeModels> GetMemberList(string orgid, string key)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(key))
+                {
+                    return _conn.Query<EmployeeModels>("select euid,name,orginationeuid orgid from employee where orginationeuid = :orgid and name like :keywords ", new { orgid = orgid, keywords = "%" + key + "%"}).ToList();
+                }
+                else {
+                    return _conn.Query<EmployeeModels>("select euid,name,orginationeuid orgid from employee where orginationeuid = :orgid ", new { orgid = orgid }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, "获取企业的联系人列表时发生异常。");
+                return new List<EmployeeModels>();
+            }
+        }
+        /// <summary>
+        /// 保存出差内容
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public object SaveTrip(TripModels param)
+        {
+            OracleTransaction tran = null;
+            try
+            {
+                if (_conn.State == System.Data.ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                tran = _conn.BeginTransaction();
+                //设置审批编号
+                param.approvalcode = "";
+
+                //第一步:将附件图片入库
+                if (param.imgs != null)
+                {
+                    var images = JsonConvert.DeserializeObject<List<ImageModels>>(param.imgs);
+                    for (var i = 0; i < images.Count; i++)
+                    {
+                        _com.CommandText = "insert into APPROVAL_PIC (approvalcode,picseq,pic) values (:approvalcode,:picseq,:pic)";
+                        _com.Transaction = tran;
+                        byte[] blob = Convert.FromBase64String(images[i].body);
+                        var filelength = blob.Length;
+                        _com.Parameters.Clear();
+                        _com.Parameters.AddRange(new OracleParameter[]{
+                                    new OracleParameter("approvalcode", param.approvalcode),
+                                    new OracleParameter("picseq", i),
+                                    new OracleParameter("pic",OracleDbType.Blob,filelength,blob,System.Data.ParameterDirection.Input),
+                                });
+                        if (_conn.State == System.Data.ConnectionState.Closed)
+                        {
+                            _conn.Open();
+                        }
+                        _com.ExecuteNonQuery();
+                    }
+                }
+                //第二步：将明细入库
+                if (param.detail != null)
+                {
+                    for (var i = 0; i < param.detail.Count; i++)
+                    {
+                        _conn.Execute("insert into APPROVAL_TRIP_DETAILS (orgeuid,approvalcode,tripseq,tripsite,tripstarttime,tripendtime) " +
+                            "values (:orgeuid,:approvalcode,:tripseq,:tripsite,to_date(:tripstarttime,'yyyy-mm-dd hh24:mi:ss',to_date(:tripendtime,'yyyy-mm-dd hh24:mi:ss'))", new
+                            {
+                                orgeuid = param.detail[i].orgeuid,
+                                approvalcode = param.approvalcode,
+                                expenseseq = i,
+                                tripsite = param.detail[i].tripsite,
+                                tripstarttime = param.detail[i].tripstarttime,
+                                tripendtime = param.detail[i].tripendtime
+                            }, tran);
+                    }
+                }
+                //第三步：将内容入库
+                _conn.Execute("insert into APPROVAL_TRIP (orgeuid,approvalcode,tripdays,tripreason) values (:orgeuid,:approvalcode,:tripdays,:tripreason) ",
+                   new
+                   {
+                       orgeuid = param.orgeuid,
+                       approvalcode = param.approvalcode,
+                       tripdays = param.tripdays,
+                       tripreason = param.tripreason
+                   }, tran);
+                //第四步：插入审批表
+                _conn.Execute("insert into APPROVAL (orgeuid,approvalcode,applyeuid,applytype,applytitle,apply) values (:orgeuid,:approvalcode,:applyeuid,applytype,applytitle,apply) ",
+                    new
+                    {
+                        orgeuid = param.orgeuid,
+                        approvalcode = param.approvalcode,
+                        applyeuid = param.euid,
+                        applytype = 1,
+                        applytitle = param.name + "的出差申请",
+                        apply = 3,
+                    }, tran);
+                //第五步：插入审批人表
+                var approval = param.approvalList.Split(',');
+                for (var j = 0; j < approval.Length; j++)
+                {
+                    _conn.Execute("insert into APPROVALER (orgeuid,approvalcode,approvaleuid) values (:orgeuid,:approvalcode,:approvaleuid) ",
+                   new
+                   {
+                       orgeuid = param.orgeuid,
+                       approvalcode = param.approvalcode,
+                       approvaleuid = approval[j]
+                   }, tran);
+                }
+                tran.Commit();
+                return new { status = 1, msg = "保存成功！" };
+            }
+            catch (Exception ex)
+            {
+                if (tran != null)
+                {
+                    tran.Rollback();
+                }
+                log.Error(ex, "保存出差内容时发生异常。");
+                return new { status = -1, msg = "保存失败！" };
+            }
+        }
+
+        /// <summary>
+        /// 保存报销内容
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public object SaveExpense(ExpenseParamModels param)
+        {
+            OracleTransaction tran = null;
+            try
+            {
+                if (_conn.State == System.Data.ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                tran = _conn.BeginTransaction();
+                //设置审批编号
+                param.approvalcode = "";
+
+                //第一步:将附件图片入库
+                if (param.imgs != null)
+                {
+                    var images = JsonConvert.DeserializeObject<List<ImageModels>>(param.imgs);
+                    for (var i = 0; i < images.Count; i++)
+                    {
+                        _com.CommandText = "insert into APPROVAL_PIC (approvalcode,picseq,pic) values (:approvalcode,:picseq,:pic)";
+                        _com.Transaction = tran;
+                        byte[] blob = Convert.FromBase64String(images[i].body);
+                        var filelength = blob.Length;
+                        _com.Parameters.Clear();
+                        _com.Parameters.AddRange(new OracleParameter[]{
+                                    new OracleParameter("approvalcode", param.approvalcode),
+                                    new OracleParameter("picseq", i),
+                                    new OracleParameter("pic",OracleDbType.Blob,filelength,blob,System.Data.ParameterDirection.Input),
+                                });
+                        if (_conn.State == System.Data.ConnectionState.Closed)
+                        {
+                            _conn.Open();
+                        }
+                        _com.ExecuteNonQuery();
+                    }
+                }
+                //第二步：将明细入库
+                if (param.detail != null)
+                {
+                    for (var i = 0; i < param.detail.Count; i++)
+                    {
+                        _conn.Execute("insert into APPROVAL_EXPENSE_DETAILS (orgeuid,approvalcode,expenseseq,expensetype,expense,expenseremark) "+
+                            "values (:orgeuid,:approvalcode,:expenseseq,:expensetype,:expense,:expenseremark)", new
+                            {
+                                orgeuid = param.detail[i].orgeuid,
+                                approvalcode = param.approvalcode,
+                                expenseseq = i,
+                                expensetype = param.detail[i].expensetype,
+                                expense = param.detail[i].expense,
+                                expenseremark = param.detail[i].expenseremark
+                            },tran);
+                    }
+                }
+                //第三步：将内容入库
+                _conn.Execute("insert into APPROVAL_EXPENSE (orgeuid,approvalcode,expensetotal) values (:orgeuid,:approvalcode,:expensetotal) ",
+                   new
+                   {
+                       orgeuid = param.orgeuid,
+                       approvalcode = param.approvalcode,
+                       expensetotal = param.expensetotal
+                   }, tran);
+                //第四步：插入审批表
+                _conn.Execute("insert into APPROVAL (orgeuid,approvalcode,applyeuid,applytype,applytitle,apply) values (:orgeuid,:approvalcode,:applyeuid,applytype,applytitle,apply) ",
+                    new
+                    {
+                        orgeuid = param.orgeuid,
+                        approvalcode = param.approvalcode,
+                        applyeuid = param.euid,
+                        applytype = 1,
+                        applytitle = param.name + "的报销申请",
+                        apply = 3,
+                    }, tran);
+                //第五步：插入审批人表
+                var approval = param.approvalList.Split(',');
+                for (var j = 0; j < approval.Length; j++)
+                {
+                    _conn.Execute("insert into APPROVALER (orgeuid,approvalcode,approvaleuid) values (:orgeuid,:approvalcode,:approvaleuid) ",
+                   new
+                   {
+                       orgeuid = param.orgeuid,
+                       approvalcode = param.approvalcode,
+                       approvaleuid = approval[j]
+                   }, tran);
+                }
+                tran.Commit();
+                return new { status = 1, msg = "保存成功！" };
+            }
+            catch (Exception ex)
+            {
+                if (tran != null)
+                {
+                    tran.Rollback();
+                }
+                log.Error(ex, "保存报销内容时发生异常。");
+                return new { status = -1, msg = "保存失败！" };
+            }
+        }
+
+        /// <summary>
+        /// 保存借款内容
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public object SaveBorrowing(BorrowingParamModels param)
+        {
+            OracleTransaction tran = null;
+            try
+            {
+                if (_conn.State == System.Data.ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                tran = _conn.BeginTransaction();
+                //设置审批编号
+                param.approvalcode = "";
+
+                //第一步:将附件图片入库
+                if (param.imgs != null)
+                {
+                    var images = JsonConvert.DeserializeObject<List<ImageModels>>(param.imgs);
+                    for (var i = 0; i < images.Count; i++)
+                    {
+                        _com.CommandText = "insert into APPROVAL_PIC (approvalcode,picseq,pic) values (:approvalcode,:picseq,:pic)";
+                        _com.Transaction = tran;
+                        byte[] blob = Convert.FromBase64String(images[i].body);
+                        var filelength = blob.Length;
+                        _com.Parameters.Clear();
+                        _com.Parameters.AddRange(new OracleParameter[]{
+                                    new OracleParameter("approvalcode", param.approvalcode),
+                                    new OracleParameter("picseq", i),
+                                    new OracleParameter("pic",OracleDbType.Blob,filelength,blob,System.Data.ParameterDirection.Input),
+                                });
+                        if (_conn.State == System.Data.ConnectionState.Closed)
+                        {
+                            _conn.Open();
+                        }
+                        _com.ExecuteNonQuery();
+                    }
+                }
+                //第二步：将内容入库
+                _conn.Execute("insert into APPROVAL_LOAN (orgeuid,approvalcode,loan,loanday,loanreson) values (:orgeuid,:approvalcode,:loan,:loanday,:loanreson)",
+                   new
+                   {
+                       orgeuid = param.orgeuid,
+                       approvalcode = param.approvalcode,
+                       loan = param.loan,
+                       loanday = param.loanday,
+                       loanreson = param.loanreson
+                   }, tran);
+                //第三步：插入审批表
+                _conn.Execute("insert into APPROVAL (orgeuid,approvalcode,applyeuid,applytype,applytitle,apply) values (:orgeuid,:approvalcode,:applyeuid,applytype,applytitle,apply) ",
+                    new
+                    {
+                        orgeuid = param.orgeuid,
+                        approvalcode = param.approvalcode,
+                        applyeuid = param.euid,
+                        applytype = 1,
+                        applytitle = param.name + "的请假申请",
+                        apply = 3,
+                    }, tran);
+                //第四步：插入审批人表
+                var approval = param.approvalList.Split(',');
+                for (var j = 0; j < approval.Length; j++)
+                {
+                    _conn.Execute("insert into APPROVALER (orgeuid,approvalcode,approvaleuid) values (:orgeuid,:approvalcode,:approvaleuid) ",
+                   new
+                   {
+                       orgeuid = param.orgeuid,
+                       approvalcode = param.approvalcode,
+                       approvaleuid = approval[j]
+                   }, tran);
+                }
+                tran.Commit();
+                return new { status = 1, msg = "保存成功！" };
+            }
+            catch (Exception ex)
+            {
+                if (tran != null)
+                {
+                    tran.Rollback();
+                }
+                log.Error(ex, "保存请假内容时发生异常。");
+                return new { status = -1, msg = "保存失败！" };
+            }
+        }
+
+        /// <summary>
+        /// 保存外出内容
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public object SaveAway(AwayParamModels param)
+        {
+            OracleTransaction tran = null;
+            try
+            {
+                if (_conn.State == System.Data.ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                tran = _conn.BeginTransaction();
+                //设置审批编号
+                param.approvalcode = "";
+
+                //第一步:将附件图片入库
+                if (param.imgs != null)
+                {
+                    var images = JsonConvert.DeserializeObject<List<ImageModels>>(param.imgs);
+                    for (var i = 0; i < images.Count; i++)
+                    {
+                        _com.CommandText = "insert into APPROVAL_PIC (approvalcode,picseq,pic) values (:approvalcode,:picseq,:pic)";
+                        _com.Transaction = tran;
+                        byte[] blob = Convert.FromBase64String(images[i].body);
+                        var filelength = blob.Length;
+                        _com.Parameters.Clear();
+                        _com.Parameters.AddRange(new OracleParameter[]{
+                                    new OracleParameter("approvalcode", param.approvalcode),
+                                    new OracleParameter("picseq", i),
+                                    new OracleParameter("pic",OracleDbType.Blob,filelength,blob,System.Data.ParameterDirection.Input),
+                                });
+                        if (_conn.State == System.Data.ConnectionState.Closed)
+                        {
+                            _conn.Open();
+                        }
+                        _com.ExecuteNonQuery();
+                    }
+                }
+                //第二步：将内容入库
+                _conn.Execute("insert into APPROVAL_OUT (orgeuid,approvalcode,outstarttime,outendtime,outhours,outreason) " +
+                   " values (:orgeuid,:approvalcode,:outstarttime,:outendtime,:outhours,:outreason) ",
+                   new
+                   {
+                       orgeuid = param.orgeuid,
+                       approvalcode = param.approvalcode,
+                       outstarttime = param.outstarttime,
+                       outendtime = param.outendtime,
+                       outhours = param.outhours,
+                       outreason = param.outreason
+                   }, tran);
+                //第三步：插入审批表
+                _conn.Execute("insert into APPROVAL (orgeuid,approvalcode,applyeuid,applytype,applytitle,apply) " +
+                    " values (:orgeuid,:approvalcode,:applyeuid,applytype,applytitle,apply) ",
+                    new
+                    {
+                        orgeuid = param.orgeuid,
+                        approvalcode = param.approvalcode,
+                        applyeuid = param.euid,
+                        applytype = 4,
+                        applytitle = param.name + "的外出申请",
+                        apply = 3,
+                    }, tran);
+                //第四步：插入审批人表
+                var approval = param.approvalList.Split(',');
+                for (var j = 0; j < approval.Length; j++)
+                {
+                    _conn.Execute("insert into APPROVALER (orgeuid,approvalcode,approvaleuid) values (:orgeuid,:approvalcode,:approvaleuid) ",
+                   new
+                   {
+                       orgeuid = param.orgeuid,
+                       approvalcode = param.approvalcode,
+                       approvaleuid = approval[j]
+                   }, tran);
+                }
+                tran.Commit();
+                return new { status = 1, msg = "保存成功！" };
+            }
+            catch (Exception ex)
+            {
+                if (tran != null)
+                {
+                    tran.Rollback();
+                }
+                log.Error(ex, "保存请假内容时发生异常。");
+                return new { status = -1, msg = "保存失败！" };
+            }
+        }
+
+        /// <summary>
+        /// 保存请示内容
+        /// </summary>
+        /// <param name="param">参数</param>
+        /// <returns></returns>
+        public object SaveConsult(ConsultParamModels param)
+        {
+            OracleTransaction tran = null;
+            try
+            {
+                if (_conn.State == System.Data.ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                tran = _conn.BeginTransaction();
+                //设置审批编号
+                param.approvalcode = "";
+
+                //第一步:将附件图片入库
+                if (param.imgs != null)
+                {
+                    var images = JsonConvert.DeserializeObject<List<ImageModels>>(param.imgs);
+                    for (var i = 0; i < images.Count; i++)
+                    {
+                        _com.CommandText = "insert into APPROVAL_PIC (approvalcode,picseq,pic) values (:approvalcode,:picseq,:pic)";
+                        _com.Transaction = tran;
+                        byte[] blob = Convert.FromBase64String(images[i].body);
+                        var filelength = blob.Length;
+                        _com.Parameters.Clear();
+                        _com.Parameters.AddRange(new OracleParameter[]{
+                                    new OracleParameter("approvalcode", param.approvalcode),
+                                    new OracleParameter("picseq", i),
+                                    new OracleParameter("pic",OracleDbType.Blob,filelength,blob,System.Data.ParameterDirection.Input),
+                                });
+                        if (_conn.State == System.Data.ConnectionState.Closed)
+                        {
+                            _conn.Open();
+                        }
+                        _com.ExecuteNonQuery();
+                    }
+                }
+                //第二步：将内容入库
+                _conn.Execute("insert into APPROVAL_REQUEST (orgeuid,approvalcode,requestreason) values (:orgeuid,:approvalcode,:requestreason) ",
+                   new
+                   {
+                       orgeuid = param.orgeuid,
+                       approvalcode = param.approvalcode,
+                       requestreason = param.reason
+                   }, tran);
+                //第三步：插入审批表
+                _conn.Execute("insert into APPROVAL (orgeuid,approvalcode,applyeuid,applytype,applytitle,apply) " +
+                    " values (:orgeuid,:approvalcode,:applyeuid,applytype,applytitle,apply) ",
+                    new
+                    {
+                        orgeuid = param.orgeuid,
+                        approvalcode = param.approvalcode,
+                        applyeuid = param.euid,
+                        applytype = 5,
+                        applytitle = param.name + "的请示申请",
+                        apply = 3,
+                    }, tran);
+                //第四步：插入审批人表
+                var approval = param.approvalList.Split(',');
+                for (var j = 0; j < approval.Length; j++)
+                {
+                    _conn.Execute("insert into APPROVALER (orgeuid,approvalcode,approvaleuid) values (:orgeuid,:approvalcode,:approvaleuid) ",
+                   new
+                   {
+                       orgeuid = param.orgeuid,
+                       approvalcode = param.approvalcode,
+                       approvaleuid = approval[j]
+                   }, tran);
+                }
+                tran.Commit();
+                return new { status = 1, msg = "保存成功！" };
+            }
+            catch (Exception ex)
+            {
+                if (tran != null)
+                {
+                    tran.Rollback();
+                }
+                log.Error(ex, "保存请示内容时发生异常。");
+                return new { status = -1, msg = "保存失败！" };
+            }
+        }
+
+        /// <summary>
+        /// 保存请假内容
+        /// </summary>
+        /// <param name="param">参数</param>
+        /// <returns></returns>
+        public object SaveOffWork(OffWorkParamModels param)
+        {
+            OracleTransaction tran = null;
+            try
+            {
+                if (_conn.State == System.Data.ConnectionState.Closed)
+                {
+                    _conn.Open();
+                }
+                tran = _conn.BeginTransaction();
+                //设置审批编号
+                param.approvalcode = "";
+               
+                //第一步:将附件图片入库
+                if (param.imgs != null)
+                {
+                    var images = JsonConvert.DeserializeObject<List<ImageModels>>(param.imgs);
+                    for (var i = 0; i < images.Count; i++)
+                    {
+                        _com.CommandText = "insert into APPROVAL_PIC (approvalcode,picseq,pic) values (:approvalcode,:picseq,:pic)";
+                        _com.Transaction = tran;
+                        byte[] blob = Convert.FromBase64String(images[i].body);
+                        var filelength = blob.Length;
+                        _com.Parameters.Clear();
+                        _com.Parameters.AddRange(new OracleParameter[]{
+                                    new OracleParameter("approvalcode", param.approvalcode),
+                                    new OracleParameter("picseq", i),
+                                    new OracleParameter("pic",OracleDbType.Blob,filelength,blob,System.Data.ParameterDirection.Input),
+                                });
+                        if (_conn.State == System.Data.ConnectionState.Closed)
+                        {
+                            _conn.Open();
+                        }
+                        _com.ExecuteNonQuery();
+                    }
+                }
+                //第二步：将内容入库
+                 _conn.Execute("insert into APPROVAL_LEAVE (orgeuid,approvalcode,leavetype,leavestarttime,leaveendtime,leavehours,leavereason) " +
+                    " values (:orgeuid,:approvalcode,:leavetype,:leavestarttime,:leaveendtime,:leavehours,:leavereason) ",
+                    new
+                    {
+                        orgeuid = param.orgeuid,
+                        approvalcode = param.approvalcode,
+                        leavetype = param.leavetype,
+                        leavestarttime = param.leavestarttime,
+                        leaveendtime = param.leaveendtime,
+                        leavehours = param.leavehours,
+                        leavereason = param.leavereason
+                    },tran);
+                //第三步：插入审批表
+                _conn.Execute("insert into APPROVAL (orgeuid,approvalcode,applyeuid,applytype,applytitle,apply) " +
+                    " values (:orgeuid,:approvalcode,:applyeuid,applytype,applytitle,apply) ",
+                    new
+                    {
+                        orgeuid = param.orgeuid,
+                        approvalcode = param.approvalcode,
+                        applyeuid = param.euid,
+                        applytype = 1,
+                        applytitle = param.name + "的请假申请",
+                        apply = 3,
+                    }, tran);
+                //第四步：插入审批人表
+                var approval = param.approvalList.Split(',');
+                for (var j = 0; j < approval.Length; j++) {
+                    _conn.Execute("insert into APPROVALER (orgeuid,approvalcode,approvaleuid) values (:orgeuid,:approvalcode,:approvaleuid) ",
+                   new
+                   {
+                       orgeuid = param.orgeuid,
+                       approvalcode = param.approvalcode,
+                       approvaleuid = approval[j]
+                   }, tran);
+                }
+                tran.Commit();
+                return new { status = 1, msg = "保存成功！" };
+            }
+            catch (Exception ex)
+            {
+                if (tran != null)
+                {
+                    tran.Rollback();
+                }
+                log.Error(ex, "保存请假内容时发生异常。");
+                return new { status = -1, msg = "保存失败！" };
+            }
+        }
+
+        /// <summary>
+        /// 获取请假类型
+        /// </summary>
+        /// <returns></returns>
+        public List<OffWorkModels> GetOffWorkType()
+        {
+            try
+            {
+                var list = new List<OffWorkModels>();
+                list.Add(new OffWorkModels { code = "1", name = "事假" });
+                list.Add(new OffWorkModels { code = "2", name = "病假" });
+                list.Add(new OffWorkModels { code = "3", name = "婚假" });
+                list.Add(new OffWorkModels { code = "4", name = "丧假" });
+                list.Add(new OffWorkModels { code = "5", name = "其它" });
+                return list;
+                //return _conn.Query<OffWorkModels>("select leavetype code, leavename name from APPROVAL_LEAVE_TYPE").ToList();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, "获取请假类型时发生异常。");
+                return new List<OffWorkModels>();
+            }
+        }
+        /// <summary>
+        /// 获取报销费用类型
+        /// </summary>
+        /// <returns></returns>
+        public List<ExpenseModels> GetExpenseType()
+        {
+            try
+            {
+                var list = new List<ExpenseModels>();
+                list.Add(new ExpenseModels { code = "1", name = "交通费" });
+                list.Add(new ExpenseModels { code = "2", name = "招待费" });
+                list.Add(new ExpenseModels { code = "3", name = "住宿费" });
+                list.Add(new ExpenseModels { code = "4", name = "通讯" });
+                list.Add(new ExpenseModels { code = "5", name = "采购" });
+                list.Add(new ExpenseModels { code = "6", name = "餐补" });
+                list.Add(new ExpenseModels { code = "7", name = "其它" });
+                return list;
+                //return _conn.Query<OffWorkModels>("select expense_type code, expense_name name from APPROVAL_EXPENSE_TYPE").ToList();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, "获取报销费用类型时发生异常。");
+                return new List<ExpenseModels>();
+            }
+        }
+    }
+}

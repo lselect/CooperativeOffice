@@ -1,0 +1,69 @@
+﻿using CooperativeOffice.Entity;
+using CooperativeOffice.Models;
+using System.Web.Mvc;
+
+namespace CooperativeOffice.Controllers
+{
+    public class ConsultController : Controller
+    {
+        /// <summary>
+        /// 请示界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Index()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 未处理请示内容界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Undecided(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 已处理请示内容界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Processed(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 抄送请示内容界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Copyforme(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 请示内容显示界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Show(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 获取联系人列表
+        /// </summary>
+        /// <param name="orgid">企业编号</param>
+        /// <param name="key">关键字</param>
+        /// <returns></returns>
+        public JsonResult GetMemberList(string orgid, string key)
+        {
+            return Json(new DBopreator().GetMemberList(orgid, key), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 保存请示内容
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public JsonResult Save(ConsultParamModels param)
+        {
+            return Json(new DBopreator().SaveConsult(param));
+        }
+    }
+}

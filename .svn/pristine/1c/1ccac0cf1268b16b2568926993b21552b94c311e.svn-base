@@ -1,0 +1,208 @@
+﻿@using CooperativeOffice.Models;
+@{
+    Layout = null;
+    var content = (OffWorkModels)ViewData["content"];
+    if (content == null) { return; }
+}
+<!DOCTYPE html>
+<html manifest="~/app.manifest">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Tilte</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/customStyle.css" />
+    <script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/platform.js"></script>
+    <script type="text/javascript">
+        if (typeof (CallClient) != "undefined") {
+            CallClient.hideTopTitle();
+        }
+    </script>
+</head>
+<body style="background-color:#f0eff4;">
+    <input type="hidden" id="createrid" name="createrid" value="" />
+    <input type="hidden" id="createname" name="createname" value="" />
+    <input type="hidden" id="phonenum" name="phonenum" value="" />
+    <input type="hidden" id="devicetype" name="devicetype" value="" />
+    <input type="hidden" id="other" name="other" value="" />
+    <input type="hidden" id="callcenterid" name="callcenterid" value="" />
+    <div class="container" style="padding-left:0; padding-right:0;">
+        <div class="row navbar-inverse">
+            <div class="col-lg-12" style="padding-right:0; padding-left:0 !important;">
+                <a id="goback" href='@ViewBag.returnurl'><i class="glyphicon glyphicon-chevron-left" style="float: left;margin: 15px; color: #fff;"></i></a>
+                <span class="custom_title">@ViewBag.Tilte</span>
+            </div>
+        </div>
+        <div class="row" style="margin-left:0 !important; margin-right:0 !important;">
+            <div class="col-xs-12" style="padding-right:0; padding-left:0 !important;">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="yj" style="display:inline-block;">
+                            @content.name.Substring(content.name.Length - 2)
+                        </div>
+                        <div style="display:inline-block; margin-left:16px;">
+                            <div class="items_title">
+                                @content.name
+                            </div>
+                            @if (ViewBag.key == 1)
+                            {
+                                <div class="items_detail" style="color:#7fffd4;">等待我审批 </div>
+                            }
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <table>
+                            <tr><td style="font-size:12px;font-weight:normal;color:#d0d0d0;">审批编号：</td><td style="font-size:12px;">@content.approvalcode</td></tr>
+                            <tr><td style="font-size:12px;font-weight:normal;color:#d0d0d0;">请假类型：</td><td style="font-size:12px;">@content.leavetype</td></tr>
+                            <tr><td style="font-size:12px;font-weight:normal;color:#d0d0d0;">开始时间：</td><td style="font-size:12px;">@content.leavestarttime</td></tr>
+                            <tr><td style="font-size:12px;font-weight:normal;color:#d0d0d0;">结束时间：</td><td style="font-size:12px;">@content.leaveendtime</td></tr>
+                            <tr><td style="font-size:12px;font-weight:normal;color:#d0d0d0;">请假天数：</td><td style="font-size:12px;">@content.leavehours</td></tr>
+                            <tr><td style="font-size:12px;font-weight:normal;color:#d0d0d0; min-width: 60px;">请假事由：</td><td style="font-size:12px; word-break:break-all; -ms-word-break:break-all; word-wrap:break-word; -ms-word-wrap:break-word;">@content.leavereason</td></tr>
+                            <tr>
+                                <td style="font-size:12px;font-weight:normal;color:#d0d0d0;">图片：</td>
+                                <td>
+                                    @if (content.imgs != null)
+                                    {
+                                        foreach (var item in content.imgs)
+                                        {
+                                            <img src="data:image/png;base64,@item.body" style="width:48px" />
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li class="list-group-item" style="padding:0 !important; background-color:transparent !important;">
+                        <ul class="list-group" style="margin-bottom:-1px !important;">
+                            @if (content.approvalList != null)
+                            {
+                                foreach (var item in content.approvalList)
+                                {
+                                    <li class="list-group-item" style="background-color:transparent !important;">
+                                        <div class="yj" style="display:inline-block;">@item.name.Substring(item.name.Length - 2)</div>
+                                        @switch (@item.result)
+                                        {
+                                            case "0":
+                                                <div style="display:inline-block; margin-left:16px; color:#999999;">审批中</div>
+                                                break;
+                                            case "1":
+                                                <div style="display:inline-block; margin-left:16px;">
+                                                    <div class="items_title" style="color:#2c6714;">同意</div>
+                                                    <div class="items_detail" style="font-size:12px; word-break:break-all; -ms-word-break:break-all; word-wrap:break-word; -ms-word-wrap:break-word;">
+                                                        @(item.reason.Length > 36 ? item.reason.Substring(0, 36) : item.reason)
+                                                    </div>
+                                                </div>
+                                                break;
+                                            case "2":
+                                                <div style="display:inline-block; margin-left:16px;">
+                                                    <div class="items_title" style="color:#ff0000;">不同意</div>
+                                                    <div class="items_detail" style="font-size:12px; word-break:break-all; -ms-word-break:break-all; word-wrap:break-word; -ms-word-wrap:break-word;">
+                                                        @(item.reason.Length > 36 ? item.reason.Substring(0, 36) : item.reason)
+                                                    </div>
+                                                </div>
+                                                break;
+                                        }
+                                        @if (ViewBag.key == 0 && item.result == "0")
+                                        {
+                                            <div style="display:inline-block; float:right; margin-right:10px;">
+                                                <a href="javascript:void(0);" onclick="Sendmsg(@item.euid)"><i class="glyphicon glyphicon-bell" style="color:#0094ff;"></i></a>
+                                            </div>
+                                        }
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </li>
+                    @if (content.copyto != null && content.copyto.Count > 0)
+                    {
+                        <li class="list-group-item" style="padding:5px 10px 5px !important; background-color:transparent !important;font-size:14px;font-weight:normal;">
+                            抄送
+                        </li>
+                        <li class="list-group-item">
+                            @foreach (var item in content.copyto)
+                            {
+                                <div class="yj" style="display:inline-block;">@item.name.Substring(item.name.Length - 2)</div>
+                            }
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div style="text-align:center; bottom:0;position:absolute; width:100%;z-index:999;">
+        <div class="btn-group btn-group-lg" style="width:100%;">
+            @if (ViewBag.key == 1)
+            {
+                <button type="button" class="btn btn-default" style="width:50%;" onclick="ShowAgreeModal(1)">同意</button>
+                <button type="button" class="btn btn-warning" style="width:50%;" onclick="ShowAgreeModal(2)">不同意</button>
+            }
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">处理意见</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="opinion" />
+                    <textarea id="suggestion" style="border:0 none #fff; width:100%;" rows="4" placeholder="请输入处理意见"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="Agree()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        /**
+        * 发送催办通知
+        */
+        function Sendmsg(euid) {
+            $.ajax({
+                url: '@Url.Action("Sendmsg", "OffWork")',
+                type: "post",
+                data: {receverid:euid,sendername:'@content.name',noticetitle:"请尽快处理"+ '@content.name'+"的请假申请。"},
+                success: function (data) {
+                    if (data.status == 1) {
+                         alert("催办通知已发出!");
+                    }
+                },
+                error: function (xhr) {
+                    alert("发送催办通知失败!");
+                }
+            });
+        }
+        function ShowAgreeModal(obj) {
+            $("#opinion").val(obj);
+            $("#myModal").modal("show");
+        }
+        /**
+        * 处理申请内容
+        */
+        function Agree() {
+            var suggestion = $("#suggestion").val();
+            $.ajax({
+                url: '@Url.Action("ProcessApproval", "OffWork")',
+                type: "post",
+                data: { approvalcode: "@ViewBag.approvalcode", approvaleuid: "@ViewBag.euid", opinion: suggestion, result: $("#opinion").val() },
+                success: function (data) {
+                    if (data.status == 1) {
+                        location.href = '@ViewBag.returnurl';
+                    } else {
+                        alert(data.msg);
+                        $("#myModal").modal("hide");
+                    }
+                },
+                error: function (xhr) {
+                    alert("处理结果保存失败!");
+                    $("#myModal").modal("hide");
+                }
+            });
+        }
+    </script>
+</body>
+</html>

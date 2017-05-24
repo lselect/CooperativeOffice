@@ -1,0 +1,146 @@
+﻿
+@{
+    Layout = null;
+    ViewBag.Tilte = "抄送我的";
+}
+
+<!DOCTYPE html>
+
+<html manifest="~/app.manifest">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Tilte</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/customStyle.css" />
+    <link rel="stylesheet" href="~/Content/LCalendar.css" />
+    <script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/angular.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/platform.js"></script>
+    <script type="text/javascript" src="~/Scripts/LCalendar.js"></script>
+    <script type="text/javascript">
+        CallClient.hideTopTitle();
+    </script>
+</head>
+<body style="background-color:#f0eff4;" ng-app="Copyforme" ng-controller="copyformeController">
+    <input type="hidden" id="createrid" name="createrid" value="" />
+    <input type="hidden" id="createname" name="createname" value="" />
+    <input type="hidden" id="phonenum" name="phonenum" value="" />
+    <input type="hidden" id="devicetype" name="devicetype" value="" />
+    <input type="hidden" id="other" name="other" value="" />
+    <input type="hidden" id="callcenterid" name="callcenterid" value="" />
+    <div class="container" style="padding-left:0; padding-right:0;">
+        <div class="row navbar-inverse">
+            <div class="col-lg-12" style="padding-right:0; padding-left:0 !important;">
+                <a href='@Url.Action("Index")'>
+                    <i class="glyphicon glyphicon-chevron-left" style="float: left;margin: 15px; color: #fff;"></i>
+                </a>
+                <span class="custom_title">@ViewBag.Tilte</span>
+            </div>
+        </div>
+        <div class="row" style="margin-left:0 !important; margin-right:0 !important;">
+            <div class="col-xs-12" style="padding-right:0; padding-left:0 !important;">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="item in items" ng-click="itemClick($index)">
+                        <div class="container-fluid" style="padding-left:0;padding-right:0; margin:0 !important;">
+                            <div class="row">
+                                <div class="col-xs-12" style="vertical-align:middle; line-height:50px;">
+                                    <div class="yj" style="display:inline-block;" ng-bind="item.ShortName"></div>
+                                    <div style="display:inline-block; margin-left:16px;">
+                                        <div class="items_title" ng-bind="item.Title"></div>
+                                        <div class="items_detail" ng-bind="item.Detail | subStr"></div>
+                                    </div>
+                                    <div style="display:inline-block; float:right;">
+                                        <div class="items_time" ng-bind="item.Time | jsonDate:'yyyy-MM-dd HH:mm'"></div>
+                                        <div class="items_detail" ng-bind="item.Result"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        angular.module("Copyforme", []).controller("copyformeController", ['$scope', '$filter', 'BusinessService', function ($scope, $filter, BusinessService) {
+            /***************获取用户信息*****************/
+            var param = sessionStorage.getItem("userinfor");
+            if (param != null && param != "" && param != undefined) {
+                try {
+                    var itemArr = JSON.parse(param);
+                    $("#createrid").val(itemArr.createrid);
+                    $("#createname").val(itemArr.creatername);
+                    $("#phonenum").val(itemArr.phonenum);
+                    $("#devicetype").val(itemArr.devicetype);
+                    $("#other").val(itemArr.other);
+                    $("#callcenterid").val(itemArr.callcenterid);
+                    var postData = {
+                        orgid: $("#callcenterid").val(),
+                        euid: $("#createrid").val()
+                    }
+                    BusinessService.list(postData).success(function (response) {
+                        $scope.items = response;
+                    });
+                } catch (e) {
+                    console.error("未能正确解释用户信息。");
+                }
+            }
+            /****************获取用户信息结束***********/
+
+            $scope.itemClick = function ($index) {
+                switch ($scope.items[$index].approvaltype) {
+                    case 1:
+                        //请假
+                        location.href = '@Url.Action("Show", "OffWork")' + "?code=" + $scope.items[$index].approvalcode + "&euid = " + $("#createrid").val() + "&returnurl=" + '@Url.Action("Copyforme", "Approval")' + "&key=3";
+                        break;
+                    case 2:
+                        //报销
+                        location.href = '@Url.Action("Show", "Expense")' + "?code=" + $scope.items[$index].approvalcode + "&euid = " + $("#createrid").val() + "&returnurl=" + '@Url.Action("Copyforme", "Approval")' + "&key=3";
+                        break;
+                    case 3:
+                        //出差
+                        location.href = '@Url.Action("Show", "Trip")' + "?code=" + $scope.items[$index].approvalcode + "&euid = " + $("#createrid").val() + "&returnurl=" + '@Url.Action("Copyforme", "Approval")' + "&key=3";
+                        break;
+                    case 4:
+                        //外出
+                        location.href = '@Url.Action("Show", "Away")' + "?code=" + $scope.items[$index].approvalcode + "&euid = " + $("#createrid").val() + "&returnurl=" + '@Url.Action("Copyforme", "Approval")' + "&key=3";
+                        break;
+                    case 5:
+                        //请示
+                        location.href = '@Url.Action("Show", "Consult")' + "?code=" + $scope.items[$index].approvalcode + "&euid = " + $("#createrid").val() + "&returnurl=" + '@Url.Action("Copyforme", "Approval")' + "&key=3";
+                        break;
+                    case 6:
+                        //借款
+                        location.href = '@Url.Action("Show", "Borrowing")' + "?code=" + $scope.items[$index].approvalcode + "&euid = " + $("#createrid").val() + "&returnurl=" + '@Url.Action("Copyforme", "Approval")' + "&key=3";
+                        break;
+                }
+            }
+        }]).factory("BusinessService", ['$http', function ($http) {
+            var list = function (postData) {
+                return $http.post('@Url.Action("GetCopyformeData", "Approval")', postData);
+            }
+            return {
+                list: function (postData) {
+                    return list(postData);
+                }
+            }
+        }]).filter("jsonDate", function ($filter) {
+            return function (input, format) {
+                //从字符串 /Date(1448864369815)/ 得到时间戳 1448864369815
+                var timestamp = Number(input.replace(/\/Date\((\d+)\)\//, "$1"));
+                //转成指定格式
+                return $filter("date")(timestamp, format);
+            };
+        }).filter('subStr', ['$sce', function ($sce) {
+            return function (text) {
+                if (text != null && text.length > 20) {
+                    return text.substring(0, 20);
+                } else {
+                    return text;
+                }
+            }
+        }]);
+    </script>
+</body>
+</html>

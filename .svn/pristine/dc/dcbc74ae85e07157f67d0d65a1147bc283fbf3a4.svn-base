@@ -1,0 +1,48 @@
+﻿using System.Web.Mvc;
+
+namespace CooperativeOffice.Controllers
+{
+    public class TripController : Controller
+    {
+        /// <summary>
+        /// 出差
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Index()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 未处理出差内容界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Undecided(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 已处理出差内容界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Processed(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 抄送出差内容界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Copyforme(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 出差显示界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Show(string code)
+        {
+            return View();
+        }
+    }
+}

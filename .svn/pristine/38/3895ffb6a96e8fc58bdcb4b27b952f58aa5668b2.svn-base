@@ -1,0 +1,248 @@
+2017-01-20 14:22:48.5934 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:22:48.5764 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:22:49.7325 ERROR 获取我发起的数据时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 Dapper.SqlMapper.<QueryImpl>d__125`1.MoveNext()
+   在 System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   在 System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   在 Dapper.SqlMapper.Query[T](IDbConnection cnn, String sql, Object param, IDbTransaction transaction, Boolean buffered, Nullable`1 commandTimeout, Nullable`1 commandType)
+   在 CooperativeOffice.Entity.DBopreator.GetStartWithMeData(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 276
+2017-01-20 14:22:52.8656 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:22:55.8678 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:22:58.8950 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:23:02.9092 ERROR 获取请假草稿时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetConsultDraft(String orgeuid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 1413
+2017-01-20 14:27:14.7426 ERROR 获取请假草稿时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetConsultDraft(String orgeuid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 1413
+2017-01-20 14:27:19.0589 ERROR 获取请假草稿时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetConsultDraft(String orgeuid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 1413
+2017-01-20 14:27:28.7664 ERROR 获取请假草稿时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetConsultDraft(String orgeuid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 1413
+2017-01-20 14:28:26.1537 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:28:27.6358 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:28:30.6410 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:28:33.6551 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:28:36.6563 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:28:41.1216 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:28:42.6477 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:28:45.6368 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:28:48.6410 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:28:51.6752 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:28:54.6503 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:28:57.7025 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:29:00.6907 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:29:03.6419 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:29:05.5170 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:29:08.4931 ERROR 获取未处理审批和抄送给我的数量时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetCount(String orgid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 2204
+2017-01-20 14:29:12.7214 ERROR 获取请假草稿时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetConsultDraft(String orgeuid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 1413
+2017-01-20 14:29:50.0285 ERROR 获取请假草稿时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.GetConsultDraft(String orgeuid, String euid) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 1413
+2017-01-20 14:30:53.6061 ERROR 保存请示内容时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.SaveConsult(ConsultModels param) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 1253
+2017-01-20 14:32:10.2835 ERROR 保存请示内容时发生异常。 
+ *****Error***** 
+ Oracle.ManagedDataAccess.Client.OracleException (0x80004005): 连接请求超时
+   在 OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   在 OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   在 Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   在 CooperativeOffice.Entity.DBopreator.SaveConsult(ConsultModels param) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 1253
+2017-01-20 14:38:14.9783 ERROR 保存请示内容时发生异常。 
+ *****Error***** 
+ System.NullReferenceException: 未将对象引用设置到对象的实例。
+   在 CooperativeOffice.Entity.DBopreator.SaveConsult(ConsultModels param) 位置 D:\工作\中小企业呼叫中心系统\协同办公\CooperativeOffice\Entity\DBopreator.cs:行号 1310

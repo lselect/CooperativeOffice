@@ -1,0 +1,48 @@
+﻿using System.Web.Mvc;
+
+namespace CooperativeOffice.Controllers
+{
+    public class ConsultController : Controller
+    {
+        /// <summary>
+        /// 请示界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Index()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 未处理请示内容界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Undecided(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 已处理请示内容界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Processed(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 抄送请示内容界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Copyforme(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 请示内容显示界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Show(string code)
+        {
+            return View();
+        }
+    }
+}

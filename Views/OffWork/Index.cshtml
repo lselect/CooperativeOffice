@@ -522,6 +522,10 @@
             */
             $scope.submit = function () {
                 var leavetype = $("#selectedType").val();
+                if (leavetype == "") {
+                    alert("请选择请假类型！");
+                    return;
+                }
                 var leavestarttime = $.trim($("#startDate").val());
                 if (leavestarttime == "") {
                     alert("请正确输入请假开始日期！");

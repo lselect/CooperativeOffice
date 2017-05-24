@@ -1,0 +1,86 @@
+﻿using System.Web.Mvc;
+
+namespace CooperativeOffice.Controllers
+{
+    public class ExpenseController : Controller
+    {
+        /// <summary>
+        /// 报销
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Index()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 未处理报销内容界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Undecided(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 已处理报销内容界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Processed(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 抄送报销内容界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Copyforme(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 报销显示界面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Show(string code)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 获取报销费用类别
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult GetExpenseType()
+        {
+            var r = new[]{
+                new{
+                expense_type = 1,
+                expense_name = "交通费"
+            },
+                new{
+                expense_type = 2,
+                expense_name = "招待费"
+            },
+                new{
+                expense_type = 3,
+                expense_name = "住宿费"
+            },
+                new{
+                expense_type = 4,
+                expense_name = "通讯"
+            },
+                new{
+                expense_type = 5,
+                expense_name = "采购"
+            },
+                new{
+                expense_type = 6,
+                expense_name = "餐补"
+            },
+                new{
+                expense_type = 7,
+                expense_name = "其它"
+            }
+        };
+            return Json(r, JsonRequestBehavior.AllowGet);
+        }
+    }
+}

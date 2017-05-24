@@ -1,0 +1,468 @@
+﻿
+@{
+    Layout = null;
+    ViewBag.Tilte = "请假";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Tilte</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/customStyle.css" />
+    <link rel="stylesheet" href="~/Content/LCalendar.css" />
+    <script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/angular.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/platform.js"></script>
+    <script type="text/javascript" src="~/Scripts/LCalendar.js"></script>
+</head>
+<body style="background-color:#f0eff4;" ng-app="OffWork" ng-controller="OffWorkController">
+    <input type="hidden" id="createrid" name="createrid" value="" />
+    <input type="hidden" id="createname" name="createname" value="" />
+    <input type="hidden" id="phonenum" name="phonenum" value="" />
+    <input type="hidden" id="devicetype" name="devicetype" value="" />
+    <input type="hidden" id="other" name="other" value="" />
+    <input type="hidden" id="callcenterid" name="callcenterid" value="" />
+    <div class="container" style="margin-left:-15px; padding-right:0;">
+        <div class="row" style="min-height:48px; line-height:48px; margin-right:0 !important; vertical-align:middle; text-align:center; background-color:#f7f7f7; border-bottom:solid 1px #d0d0d0;">
+            <div class="col-lg-12">
+                <a id="goback" href='@Url.Action("Index","Approval")'><i class="glyphicon glyphicon-chevron-left" style="float: left;margin: 15px;color: #3E8CEC;"></i></a>
+                <span class="custom_title">@ViewBag.Tilte</span>
+            </div>
+        </div>
+        <div class="row" style="margin-right:0 !important;">
+            <div class="col-xs-12" style="padding-right:0;">
+                <ul class="list-group">
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label>请假类型</label>
+                        <div style="float:right;">
+                            <input type="hidden" id="selectedType" value="" />
+                            <a href="#" data-toggle="modal" data-target="#typeModal">
+                                <span id="typeShow">请选择(必填)</span>
+                                <i class="glyphicon glyphicon-chevron-right" style="color:#d0d0d0;"></i>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <label>开始时间</label>
+                        <div style="margin-left:16px; display:inline;">
+                            <input id="startDate" type="text" readonly="" name="startDate" placeholder="请输入日期" data-lcalendar="2000-01-01,2018-01-29" />
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label>结束时间</label>
+                        <div style="margin-left:16px; display:inline;">
+                            <input id="endDate" type="text" readonly="" name="endDate" placeholder="请输入日期" data-lcalendar="2000-01-01,2018-01-29" />
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label style="margin-right:16px;">请假天数</label>
+                        <input id="days" type="text" placeholder="请输入请假天数(必填)" />
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px; padding:0;">
+                        <textarea id="resion" style="width:100%; padding:3px;" rows="4" placeholder="请输入请假事由(必填)"></textarea>
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <div>
+                            <label style="margin-right:16px;">图片</label>
+                            <div style="float:right; display:inline-block;">
+                                <a href="javascript:void(0)" id="choisePic" onclick="addfield()"><i class="glyphicon glyphicon-folder-open"></i></a>
+                                <a href="javascript:void(0)" id="pzPic" onclick="FileUpload()" style="margin-left:10px;"><i class="glyphicon glyphicon-camera"></i></a>
+                            </div>
+                        </div>
+                        <div id="annexlist" style="padding-top:5px; padding-bottom:5px; background-color:white; overflow-y:auto;">
+
+                        </div>
+                        <input type="file" id="file_input" style="visibility:hidden" />
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label style="margin-right:16px;">审批人</label>
+                        <div style="padding:10px;">
+                            <div id="approvalList"></div>
+                            <div class="yj" style="border:1px solid #97d1cc; background-color:transparent !important;">
+                                <a href="javascript:void(0);" ng-click="showMemberModal(0)"><i class="glyphicon glyphicon-plus" style="margin-left: 8px; margin-top: 10px; color:#97d1cc;"></i></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label style="margin-right:16px;">抄送人</label>
+                        <div style="padding:10px;">
+                            <div id="copytoList"></div>
+                            <div class="yj" style="border:1px solid #97d1cc; background-color:transparent !important;">
+                                <a href="javascript:void(0);" ng-click="showMemberModal(1)"><i class="glyphicon glyphicon-plus" style="margin-left: 8px; margin-top: 10px; color:#97d1cc;"></i></a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <script type="text/javascript">
+                    var calendar_start = new LCalendar();
+                    var calendar_end = new LCalendar();
+                    calendar_start.init({
+                        'trigger': '#startDate',//标签id
+                        'type': 'date',//date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择
+                        'minDate': '2016-11-1',//最小日期 注意：该值会覆盖标签内定义的日期范围
+                        'maxDate': '2099-1-1'//最大日期 注意：该值会覆盖标签内定义的日期范围
+                    });
+                    calendar_end.init({
+                        'trigger': '#endDate',//标签id
+                        'type': 'date',//date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择
+                        'minDate': '2016-11-1',//最小日期 注意：该值会覆盖标签内定义的日期范围
+                        'maxDate': '2099-1-1'//最大日期 注意：该值会覆盖标签内定义的日期范围
+                    });
+                </script>
+                <div style="text-align:center; padding-bottom:10px;">
+                    <a class="btn btn-primary" style="width:80%;" ng-click="submit()">提交</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="panel_photo_max">
+        <div class="subwrap">
+            <img id="photo_max" src="" />
+        </div>
+        <a href="javascript:void(0);" onclick="$(this).parent().hide();" style="position: absolute; top: 8px; right: 8px"><i class="glyphicon glyphicon-remove-circle" style="color:#f00;"></i></a>
+    </div>
+    <div class="loading-modal modal2" id="masklayer" style="display:none;">
+        <div class="loading">
+            <img src="/Images/loading.gif" alt="" /><br><span ng-bind="loading_text">加载中</span>
+        </div>
+    </div>
+    <!-- Modal请假类型 -->
+    <div class="modal fade" id="typeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body" style="background-color:#f3f3f3; padding:0 !important;">
+                    <ul class="list-group" style="margin-bottom:-1px;">
+                        <li class="list-group-item" ng-repeat="item in offtype" ng-click="fillType($index)" ng-bind="item.name">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal联系人 -->
+    <div class="modal fade" id="memberModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    人员列表
+                </div>
+                <div class="modal-body" style="background-color:#f3f3f3; padding:0 !important; max-height:560px; overflow-y:auto; overflow-x:hidden;">
+                    <input type="hidden" id="witchpanle" value="" />
+                    <div class="input-group" style="margin-top:3px; margin-bottom:3px;">
+                        <input id="search_input" type="text" class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="search()"><i class="glyphicon glyphicon-search"></i></button>
+                        </span>
+                    </div><!-- /input-group -->
+                    <ul class="list-group" style="margin-bottom:-1px;">
+                        <li class="list-group-item" ng-repeat="item in items" ng-click="AddMember($index)">
+                            <div class="yj" style="display:table-cell; line-height:36px; vertical-align:middle; padding-left:4px; font-weight:normal;" ng-bind="item.name | subStr"></div>
+                            <span style="display:table-cell; line-height:36px; vertical-align:middle; padding-left:10px;" ng-bind="item.name"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var imgs = []; var isbusy = false;
+        $(function () {
+            var input = document.getElementById("file_input");
+            if (typeof FileReader === "undefined") {
+                alert("你的设备不支持本地文件读取。");
+                input.setAttribute("disabled", "disabled");
+                $("#choisePic").hide();
+            } else {
+                if (callClientProxy.browserType != callClientProxy.browserTypes.ios) {
+                    input.removeEventListener("change", readFile, false);
+                    input.addEventListener("change", readFile, false);
+                    $("#choisePic").show();
+                    if (callClientProxy.browserType == callClientProxy.browserTypes.windows) {
+                        $("#pzPic").hide();
+                    }
+                } else {
+                    $("#choisePic").hide();
+                }
+            }
+            /***************获取用户信息*****************/
+            var param = sessionStorage.getItem("userinfor");
+            if (param != null && param != "" && param != undefined) {
+                try {
+                    var itemArr = JSON.parse(param);
+                    $("#createrid").val(itemArr.createrid);
+                    $("#createname").val(itemArr.createname);
+                    $("#phonenum").val(itemArr.phonenum);
+                    $("#devicetype").val(itemArr.devicetype);
+                    $("#other").val(itemArr.other);
+                    $("#callcenterid").val(itemArr.callcenterid);
+                } catch (e) {
+                    console.error("未能正确解释用户信息。");
+                }
+            }
+            /****************获取用户信息结束***********/
+        });
+        /**
+        调用设备获取图像
+        */
+        function FileUpload() {
+            if (!isfull()) {
+                callClientProxy.takePhotoBase64("photo");
+            }
+            else {
+                alert("附件已达到最大数。");
+            }
+        }
+        /**
+        获取图像回调函数
+        */
+        function photo(pir) {
+            if (pir === null) {
+                alert("图片获取失败。");
+                return;
+            }
+            var datenow = new Date();
+            var id = datenow.getHours().toString() + datenow.getMinutes().toString() + datenow.getSeconds().toString() + datenow.getMilliseconds().toString();
+            var imgbody = pir.toString();
+            var begin = imgbody.indexOf("base64,");
+            if (begin == -1) {
+                begin = 0;
+            } else {
+                begin = begin + 7;
+            }
+            imgbody = imgbody.substring(begin, imgbody.length);
+            var innerIMG = "<div id='div" + id + "' style='width:30%; display:inline-block; margin:5px;'>" +
+                           "<span class='fa fa-close' style='color:red; font-size:28px; z-index:1;position:relative; float:right;' onclick='delelement(this)'></span>" +
+                           "<img class='popphoto' src='data:image/jpg;base64," + imgbody + "' onclick='ShowBigPic(this)' style='width:100%; margin-right:5px; margin-top:-28px; z-index:0'></div>";
+            $("#annexlist").append(innerIMG);
+            $("#annexlist").trigger("create");
+        };
+        /**
+        显示大图
+        */
+        function ShowBigPic(obj) {
+            //给大图框赋值
+            $("#panel_photo_max").show();
+            $("#photo_max").attr('src', $(obj).attr("src"));
+        };
+        /**
+        增加文件上传控件
+        */
+        function addfield() {
+            if (!isfull()) {
+                $("#file_input").trigger("click");
+            }
+            else {
+                alert("附件已达到最大数。");
+            }
+        }
+        /**
+         * 删除要上传的图片
+         */
+        function delelement(obj) {
+            $(obj).parent().remove();
+        };
+        /**
+        * 检查附件是否已超过数量限制
+        */
+        function isfull() {
+            var arr = $("#annexlist").children("div");
+            if (arr.length >= 5) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        /**
+         * 读取本地文件
+         */
+        function readFile() {
+            $("#masklayer").show();
+            addpages_file = this.files[0];
+            if (!/image\/\w+/.test(addpages_file.type)) {
+                alert("文件必须为图片！");
+                return false;
+            } else {
+                var reader = new FileReader();
+                reader.readAsDataURL(addpages_file);
+                reader.onload = function (e) {
+                    var datenow = new Date();
+                    var id = datenow.getHours().toString() + datenow.getMinutes().toString() + datenow.getSeconds().toString() + datenow.getMilliseconds().toString();
+                    var innerIMG = "<div id='div" + id + "' style='width:30%; display:inline-block; margin:5px;'>" +
+                            "<span class='glyphicon glyphicon-remove' style='color:red; font-size:18px; z-index:1;position:relative; float:right;' onclick='delelement(this)'></span>" +
+                            "<img class='popphoto' src='" + this.result + "' onclick='ShowBigPic(this)' style='width:100%; margin-right:5px; margin-top:-18px; z-index:0'></div>";
+                    $("#annexlist").append(innerIMG);
+                    $("#file_input").val("");
+                    $("#annexlist").trigger("create");
+                    $("#masklayer").hide();
+                }
+            }
+        };
+
+        angular.module("OffWork", []).controller("OffWorkController", ['$scope', '$http', function ($scope, $http) {
+            $scope.approval = new Array();
+            $scope.copyto = new Array();
+            var orgid = $("#callcenterid").val();
+            $http.post('@Url.Action("GetMemberList")', { orgid: orgid, key: null }).success(function (response) {
+                if (response) {
+                    $scope.items = response;
+                }
+            });
+            $http.post('@Url.Action("GetOffWorkType")', {}).success(function (response) {
+                if (response) {
+                    $scope.offtype = response;
+                }
+            });
+            /**
+            填充请假事由
+            */
+            $scope.fillType = function ($index) {
+                $("#selectedType").val($scope.offtype[$index].code);
+                $("#typeShow").html($scope.offtype[$index].name);
+                $("#typeModal").modal("hide");
+            }
+            /**
+            添加联系人
+            */
+            $scope.AddMember = function ($index) {
+                var partial = "<div class='yj' style='line-height:36px; vertical-align:middle; padding-left:4px; font-weight:normal;' ng-click='DelMember(\"" + $scope.items[$index].euid + "\",";
+                if ($("#witchpanle").val() == 0) {
+                    partial += "0)'>" + $scope.items[$index].name + "</div>";
+                    $(partial).appendTo("#approvalList");
+                    $scope.approval.push($scope.items[$index].euid);
+                } else {
+                    partial += "1)'>" + $scope.items[$index].name + "</div>";
+                    $(partial).appendTo("#copytoList");
+                    $scope.copyto.push($scope.items[$index].euid);
+                }
+
+                $("#memberModal").modal("hide");
+            };
+            $scope.DelMember = function (euid, key) {
+                if (key == 0) {
+                    for (var i = 0; i < $scope.approval.length; i++) {
+                        if ($scope.approval[i].euid == euid) {
+                            $scope.approval.splice(i, 1);
+                            $("#approvalList").children(".yj:eq(" + i + ")").empty();
+                            break;
+                        }
+                    }
+                } else {
+                    for (var i = 0; i < $scope.copyto.length; i++) {
+                        if ($scope.copyto[i].euid == euid) {
+                            $scope.copyto.splice(i, 1);
+                            $("#copytoList").children(".yj:eq(" + i + ")").empty();
+                            break;
+                        }
+                    }
+                }
+            };
+            /**
+            显示联系人对话框
+            */
+            $scope.showMemberModal = function (n) {
+                $("#witchpanle").val(n);
+                $("#memberModal").modal("show");
+            };
+            /**
+            搜索联系人
+            */
+            $scope.search = function () {
+                if ($.trim($("#search_input").val()) == null || $.trim($("#search_input").val()) == "") {
+                    return;
+                } else {
+                    $http.post('@Url.Action("GetMemberList")', { orgid: orgid, key: $.trim($("#search_input").val()) }).success(function (response) {
+                        if (response) {
+                            $scope.items = response;
+                        }
+                    });
+                }
+            }
+            /**
+            提交表单
+            */
+            $scope.submit = function () {
+               
+                var leavetype = $("#selectedType").val();
+                var leavestarttime = $.trim($("#startDate").val());
+                if (leavestarttime == "") {
+                    alert("请正确输入请假开始日期！");
+                    return;
+                }
+                var leaveendtime = $.trim($("#endDate").val());
+                if (leaveendtime == "") {
+                    alert("请正确输入请假结束日期！");
+                    return;
+                }
+                var leavehours = $.trim($("#days").val());
+                if (isNaN(parseFloat(leavehours))) {
+                    alert("请正确输入请假天数！");
+                    return;
+                }
+                var leavereason = $.trim($("#resion").val());
+                if (leavereason == "") {
+                    alert("请假原因必需填写。");
+                    return;
+                }
+                if ($scope.approval.length == 0) {
+                    alert("请选择审批人。");
+                    return;
+                }
+                var imgs = new Array();
+                var arr = $("#annexlist").children("div");
+                if (arr.length > 0) {
+                    for (var i = 0; i < arr.length; i++) {
+                        var subArr = $(arr[i]).children("img");
+                        var id = arr[i].id.substr(3);
+                        imgs.push({ id: arr[i].id, body: subArr.attr("src") });
+                    }
+                }
+                $("#masklayer").show();
+                $.ajax({
+                    type: "post",
+                    url: '@Url.Action("Save")',
+                    data: {
+                        orgeuid: $("#callcenterid").val(),
+                        euid: $("#createrid").val(),
+                        name: $("#createname").val(),
+                        leavetype: leavetype,
+                        leavestarttime: leavestarttime,
+                        leaveendtime: leaveendtime,
+                        leavehours: leavehours,
+                        leavereason: leavereason,
+                        approvalList: $scope.approval.join(','),
+                        copyto: $scope.copyto.join(','),
+                        imgs: JSON.stringify(imgs)
+                    },
+                    success: function (data) {
+                        if (data.status == 1) {
+                            alert("保存成功！");
+                            sessionStorage.setItem("imgfiles", null);
+                            $("#goback").trigger("click");
+                        } else {
+                            alert(data.msg);
+                        }
+                    },
+                    error: function (e) {
+                        alert("保存失败！");
+                        $("#masklayer").hide();
+                    }
+                });
+            }
+        }]).filter('subStr', ['$sce', function ($sce) {
+            return function (text) {
+                if (text.length > 2) {
+                    return text.subString(text.length - 2);
+                }
+                else {
+                    return text;
+                }
+            }
+        }]);
+    </script>
+</body>
+</html>

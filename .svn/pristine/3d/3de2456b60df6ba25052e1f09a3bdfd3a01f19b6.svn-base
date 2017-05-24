@@ -1,0 +1,38 @@
+﻿namespace CooperativeOffice.Models
+{
+    public class ConsultParamModels
+    {
+        /// <summary>
+        /// 企业编号
+        /// </summary>
+        public string orgeuid { get; set; }
+        /// <summary>
+        /// 请假人编号
+        /// </summary>
+        public string euid { get; set; }
+        /// <summary>
+        /// 请假人姓名
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// 审批编号
+        /// </summary>
+        public string approvalcode { get; set; }
+        /// <summary>
+        /// 请示内容
+        /// </summary>
+        public string reason { get; set; }
+        /// <summary>
+        /// 审批人
+        /// </summary>
+        public string approvalList { get; set; }
+        /// <summary>
+        /// 抄送人
+        /// </summary>
+        public string copyto { get; set; }
+        /// <summary>
+        /// 图片
+        /// </summary>
+        public string imgs { get; set; }
+    }
+}

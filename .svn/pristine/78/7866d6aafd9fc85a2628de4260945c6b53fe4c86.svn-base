@@ -1,0 +1,227 @@
+﻿
+@{
+    Layout = null;
+    ViewBag.Tilte = "报销";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Tilte</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/customStyle.css" />
+    <script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+</head>
+<body style="background-color:#f0eff4;">
+    <div class="container" style="padding-left:0; padding-right:0;">
+        <div class="row" style="min-height:48px; line-height:48px; vertical-align:middle; text-align:center; background-color:#f7f7f7; border-bottom:solid 1px #d0d0d0;">
+            <div class="col-lg-12">
+                <a href='@Url.Action("Index","Approval")'><i class="glyphicon glyphicon-chevron-left" style="float: left;margin: 15px;color: #3E8CEC;"></i></a>
+                <span class="custom_title">@ViewBag.Tilte</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12" style="padding-right:0;">
+                <ul class="list-group">
+                    <li id="expenseItems" class="list-group-item" style="padding:0;">
+                        <ul class="list-group" style="margin-bottom:-1px;">
+                            <li class="list-group-item">
+                                <label>费用类别</label>
+                                <div style="float:right;">
+                                    <input id="selectedTypeId0" type="hidden" value="" />
+                                    <a href="#" data-toggle="modal" data-target="#typeModal" onclick="fillItemId(0)">
+                                        <span id="selectedTypeName0">请选择(必填)</span>
+                                        <i class="glyphicon glyphicon-chevron-right" style="color:#d0d0d0;"></i>
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label style="margin-right:16px;">报销金额</label>
+                                <input type="number" style="border:0 none #fff; color:#97d1cc;outline:none;" value="" placeholder="0.00" />
+                            </li>
+                            <li class="list-group-item">
+                                <textarea style="border:0 none #fff; width:100%;outline:none;color:#d0d0d0; " rows="4" placeholder="请填写备注"></textarea>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="list-group-item" style="text-align:right;margin-bottom:10px;">
+                        <a class="btn btn-default" onclick="AddItem();"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label>合计金额</label>
+                        <div style="float:right;">
+                            <span id="total" style="border:0 none #fff; color:#97d1cc;">0.00</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <div>
+                            <label style="margin-right:16px;">图片</label>
+                            <a style="float:right;"><i class="glyphicon glyphicon-camera"></i></a>
+                        </div>
+                        <div id="photoContainer" style="padding:10px;">
+                            <img style="width:48px; height:48px;" alt="增加" />
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label style="margin-right:16px;">审批人</label>
+                        <div style="padding:10px;">
+                            <div class="yj" style="background-color:#97d1cc;"><i class="glyphicon glyphicon-plus" style="margin-left: 8px; margin-top: 16px;"></i></div>
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label style="margin-right:16px;">抄送人</label>
+                        <div style="padding:10px;">
+                            <div class="yj" style="background-color:#97d1cc;"><i class="glyphicon glyphicon-plus" style="margin-left: 8px; margin-top: 16px;"></i></div>
+                        </div>
+                    </li>
+                </ul>
+                <div style="text-align:center;">
+                    <a class="btn btn-primary">提交</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal费用类别 -->
+    <div class="modal fade" id="typeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body" style="background-color:#f3f3f3; padding:0 !important;">
+                    <input id="selectedItemId" type="hidden" value="0" />
+                    <ul class="list-group" style="margin-bottom:-1px;">
+                        <li class="list-group-item" onclick="fillType(1);">
+                            交通费
+                        </li>
+                        <li class="list-group-item" onclick="fillType(2);">
+                            招待费
+                        </li>
+                        <li class="list-group-item" onclick="fillType(3);">
+                            住宿费
+                        </li>
+                        <li class="list-group-item" onclick="fillType(4);">
+                            通讯
+                        </li>
+                        <li class="list-group-item" onclick="fillType(5);">
+                            采购
+                        </li>
+                        <li class="list-group-item" onclick="fillType(6);">
+                            餐补
+                        </li>
+                        <li class="list-group-item" onclick="fillType(7);">
+                            其它
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            @*<script type="text/javascript">
+                    $('#typeModal').on('show.bs.modal', function (e) {
+                        $.getJSON('@Url.Action("GetExpenseType")', {}, function (json) {
+                            if (json) {
+                                sessionStorage.setItem("expenseType", json);
+                                $("#eType").empty();
+                                for (var i = 0; i < json.length; i++) {
+                                    $("<li class='list-group-item;'><label>" + json[i].expense_name + "<input type='radio' value='" + json[i].expense_type + "' /></label></li>").appendTo("#eType");
+                                }
+                            }
+                        });
+                    })
+                </script>*@
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            binding();
+        });
+        /**
+        填充费用类型函数
+        */
+        function fillType(num) {
+            var key = $("#selectedItemId").val();
+            switch (num) {
+                case 1:
+                    $("#selectedTypeName" + key).html("交通费");
+                    break;
+                case 2:
+                    $("#selectedTypeName" + key).html("招待费");
+                    break;
+                case 3:
+                    $("#selectedTypeName" + key).html("住宿费");
+                    break;
+                case 4:
+                    $("#selectedTypeName" + key).html("通讯");
+                    break;
+                case 5:
+                    $("#selectedTypeName" + key).html("采购");
+                    break;
+                case 6:
+                    $("#selectedTypeName" + key).html("餐补");
+                    break;
+                case 7:
+                    $("#selectedTypeName" + key).html("其它");
+                    break;
+            }
+            $("#typeModal").modal("hide");
+        };
+        /**
+        填充报销项目编号函数
+        */
+        function fillItemId(num) {
+            $("#selectedItemId").val(num);
+        }
+        /**
+        增加报销项目函数
+        */
+        function AddItem() {
+            var c = $("#expenseItems").children("ul");
+            var code = c.length + 1;
+            $("<ul id='item" + code + "' class='list-group' style='margin-bottom:-1px;'><li class='list-group-item' style='text-align:right; border:none; background-color:#f0eff4;'> " +
+              "<a href='#'onclick='DeleteItem(" + code + ")'><i class='glyphicon glyphicon-minus' style='color:#d0d0d0;'></i><span style='margin-left:3px;'>删除</span></a></li>" +
+              "<li class='list-group-item'><label>费用类别</label><div style='float:right;'><input id='selectedTypeId" + code + "' type='hidden' value='' />" +
+              "<a href='#' data-toggle='modal' data-target='#typeModal' onclick='fillItemId(" + code + ")'><span id='selectedTypeName" + code + "'>请选择(必填)</span>" +
+              "<i class='glyphicon glyphicon-chevron-right' style='color:#d0d0d0;'></i></a></div></li>" +
+              "<li class='list-group-item'><label style='margin-right:16px;'>报销金额</label><input type='number' style='border:0 none #fff; color:#97d1cc;outline:none;' value='' placeholder='0.00' /></li>" +
+              "<li class='list-group-item'><textarea style='border:0 none #fff; width:100%;outline:none;color:#d0d0d0; ' rows='4' placeholder='请填写备注'></textarea>" +
+              "</li></ul>").appendTo("#expenseItems");
+            binding();
+        }
+        /**
+        为报销金额输入框绑定事件
+        */
+        function binding() {
+            $("input[type='number']").unbind('input propertychange');
+            $("input[type='number']").bind('input propertychange', function () {
+                var a = $(this).val();
+                if (!isNaN(parseFloat(a))) {
+                    var c = 0.00;
+                    $("input[type='number']").each(function () {
+                        var b = $(this).val();
+                        if (b != "" && !isNaN(parseFloat(b))) {
+                            c += parseFloat(b);
+                        }
+                    });
+                    $("#total").html(c);
+                } else {
+                    $(this).empty();
+                }
+            });
+        }
+        /**
+        删除报销项目函数
+        */
+        function DeleteItem(num) {
+            $("#item" + num).remove();
+            var c = 0.00;
+            $("input[type='number']").each(function () {
+                var b = $(this).val();
+                if (b != "" && !isNaN(parseFloat(b))) {
+                    c += parseFloat(b);
+                }
+            });
+            $("#total").html(c);
+        }
+    </script>
+</body>
+</html>

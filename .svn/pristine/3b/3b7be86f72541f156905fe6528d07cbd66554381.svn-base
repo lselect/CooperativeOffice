@@ -1,0 +1,58 @@
+﻿        .custom_title {
+            font-weight: bold;
+            font-family: 'Microsoft YaHei';
+            font-size: 14px;
+            color: #808080;
+        }
+
+        .custom_title14 {
+            font-family: 'Microsoft YaHei';
+            font-size: 14px;
+            color: #808080;
+        }
+
+        .custom_title12 {
+            padding: 3px;
+            font-family: 'Microsoft YaHei';
+            font-size: 12px;
+            color: #808080;
+        }
+
+        .yj {
+            padding-left: 8px;
+            width: 48px;
+            height: 48px;
+            border: 0 none #3E8CEC;
+            background-color: #3E8CEC;
+            -moz-border-radius: 24px;
+            -webkit-border-radius: 24px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            font-family: 'Microsoft YaHei';
+        }
+
+        .items_title {
+            line-height: normal;
+            font-family: 'Microsoft YaHei';
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .items_detail {
+            line-height: normal;
+            font-family: 'Microsoft YaHei';
+            font-size: 14px;
+            font-weight: normal;
+            color: #8e8e8e;
+        }
+
+        .items_time {
+            line-height: normal;
+            font-family: 'Microsoft YaHei';
+            font-size: 12px;
+            font-weight: normal;
+            color: #8e8e8e;
+        }
