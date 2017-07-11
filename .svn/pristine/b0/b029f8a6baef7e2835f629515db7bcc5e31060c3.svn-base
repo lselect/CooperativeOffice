@@ -457,7 +457,7 @@ namespace CooperativeOffice.Entity
                     {
                         tran.Rollback();
                     }
-                    log.Error(ex, "保存出差内容时发生异常。参数：" + JsonConvert.SerializeObject(param));
+                    log.Error(ex, "保存出差内容时发生异常。");
                     return new { status = -1, msg = "保存失败！" };
                 }
             }
@@ -499,7 +499,7 @@ namespace CooperativeOffice.Entity
             }
             catch (Exception ex)
             {
-                log.Error(ex, "保存出差草稿时发生异常。");
+                log.Error(ex, "保存请假内容时发生异常。");
                 return new { status = -1, msg = "保存失败！" };
             }
         }
@@ -686,7 +686,7 @@ namespace CooperativeOffice.Entity
                     {
                         tran.Rollback();
                     }
-                    log.Error(ex, "保存报销内容时发生异常。参数：" + JsonConvert.SerializeObject(param));
+                    log.Error(ex, "保存报销内容时发生异常。");
                     return new { status = -1, msg = "保存失败！" };
                 }
             }
@@ -732,7 +732,7 @@ namespace CooperativeOffice.Entity
             }
             catch (Exception ex)
             {
-                log.Error(ex, "保存报销草稿时发生异常。");
+                log.Error(ex, "保存请假内容时发生异常。");
                 return new { status = -1, msg = "保存失败！" };
             }
         }
@@ -901,7 +901,7 @@ namespace CooperativeOffice.Entity
                     {
                         tran.Rollback();
                     }
-                    log.Error(ex, "保存借款内容时发生异常。参数：" + JsonConvert.SerializeObject(param));
+                    log.Error(ex, "保存请假内容时发生异常。");
                     return new { status = -1, msg = "保存失败！" };
                 }
             }
@@ -947,7 +947,7 @@ namespace CooperativeOffice.Entity
             }
             catch (Exception ex)
             {
-                log.Error(ex, "保存借款草稿时发生异常。");
+                log.Error(ex, "保存请假内容时发生异常。");
                 return new { status = -1, msg = "保存失败！" };
             }
         }
@@ -1121,7 +1121,7 @@ namespace CooperativeOffice.Entity
                     {
                         tran.Rollback();
                     }
-                    log.Error(ex, "保存外出内容时发生异常。参数：" + JsonConvert.SerializeObject(param));
+                    log.Error(ex, "保存请假内容时发生异常。");
                     return new { status = -1, msg = "保存失败！" };
                 }
             }
@@ -1167,7 +1167,7 @@ namespace CooperativeOffice.Entity
             }
             catch (Exception ex)
             {
-                log.Error(ex, "保存外出草稿时发生异常。");
+                log.Error(ex, "保存请假内容时发生异常。");
                 return new { status = -1, msg = "保存失败！" };
             }
         }
@@ -1337,7 +1337,7 @@ namespace CooperativeOffice.Entity
                     {
                         tran.Rollback();
                     }
-                    log.Error(ex, "保存请示内容时发生异常。参数：" + JsonConvert.SerializeObject(param));
+                    log.Error(ex, "保存请示内容时发生异常。");
                     return new { status = -1, msg = "保存失败！" };
                 }
             }
@@ -1383,7 +1383,7 @@ namespace CooperativeOffice.Entity
             }
             catch (Exception ex)
             {
-                log.Error(ex, "保存请示草稿时发生异常。");
+                log.Error(ex, "保存请假内容时发生异常。");
                 return new { status = -1, msg = "保存失败！" };
             }
         }
@@ -1447,7 +1447,6 @@ namespace CooperativeOffice.Entity
         /// <returns></returns>
         public object SaveOffWork(OffWorkModels param)
         {
-
             using (var _conn = OpenConnection())
             {
                 IDbTransaction tran = null;
@@ -1559,7 +1558,7 @@ namespace CooperativeOffice.Entity
                     {
                         tran.Rollback();
                     }
-                    log.Error(ex, "保存请假内容时发生异常。参数：" + JsonConvert.SerializeObject(param));
+                    log.Error(ex, "保存请假内容时发生异常。");
                     return new { status = -1, msg = "保存失败！" };
                 }
             }
@@ -1605,7 +1604,7 @@ namespace CooperativeOffice.Entity
             }
             catch (Exception ex)
             {
-                log.Error(ex, "保存请假草稿时发生异常。");
+                log.Error(ex, "保存请假内容时发生异常。");
                 return new { status = -1, msg = "保存失败！" };
             }
         }

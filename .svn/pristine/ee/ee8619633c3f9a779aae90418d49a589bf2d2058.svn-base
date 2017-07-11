@@ -32,7 +32,7 @@
     <div class="container" style="padding-left:0; padding-right:0;">
         <div class="row  navbar-inverse">
             <div class="col-lg-12" style="padding-right:0; padding-left:0 !important;">
-                <a id="goback" href='javascript:void(0)' onclick="CallClient.back()">
+                <a id="goback" href='javascript:void(0)' onclick="javascript: CallClient.back()">
                     <img src="~/Images/返回.png" style="float: left;width: 13px; height: 24px;margin-left: 18px;margin-top: 12px;" />
                 </a>
                 <span class="custom_title">@ViewBag.Tilte</span>

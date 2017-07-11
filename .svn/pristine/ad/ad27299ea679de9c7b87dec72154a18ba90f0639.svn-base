@@ -1,11 +1,11 @@
 ﻿
 @{
     Layout = null;
-    ViewBag.Tilte = "借款";
+    ViewBag.Tilte = "外出";
 }
 
 <!DOCTYPE html>
-<html manifest="~/app.manifest">
+<html  manifest="~/app.manifest">
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Tilte</title>
@@ -28,7 +28,7 @@
         }
     </script>
 </head>
-<body style="background-color:#f0eff4;" ng-app="Borrowing" ng-controller="BorrowingController">
+<body style="background-color:#f0eff4;" ng-app="AwayWork" ng-controller="AwayController">
     <input type="hidden" id="createrid" name="createrid" value="" />
     <input type="hidden" id="createname" name="createname" value="" />
     <input type="hidden" id="phonenum" name="phonenum" value="" />
@@ -46,21 +46,25 @@
         </div>
         <div class="row" style="margin-left:0 !important; margin-right:0 !important;">
             <div class="col-xs-12" style="padding-right:0; padding-left:0 !important;">
-                <ul class="list-group" style="margin-bottom:-1px;">
+                <ul class="list-group">
                     <li class="list-group-item">
-                        <label style="margin-right:16px;">借款金额</label>
+                        <label>开始时间</label>
                         <div style="margin-left:16px; display:inline;">
-                            <input id="loan" type="number" min="0" step="0.1" style="border:0 none #fff; color:#97d1cc;outline:none; " placeholder="请填金额" />
+                            <input id="startDate" type="text" readonly="" name="startDate" placeholder="开始时间" data-role="date" data-inline="true" />
                         </div>
                     </li>
-                    <li class="list-group-item">
-                        <label>领款日期</label>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label>结束时间</label>
                         <div style="margin-left:16px; display:inline;">
-                            <input id="startDate" type="text" readonly="" name="startDate" placeholder="领款日期" data-role="date" data-inline="true" />
+                            <input id="endDate" type="text" readonly="" name="endDate" placeholder="结束时间" data-role="date" data-inline="true" />
                         </div>
                     </li>
-                    <li class="list-group-item">
-                        <textarea id="resion" style="border:0 none #fff; width:100%;outline:none;color:#97d1cc; " rows="4" placeholder="请填写事由"></textarea>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label style="margin-right:16px;">外出时长（小时）</label>
+                        <input id="days" type="text" placeholder="请输入外出时长(必填)" />
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <textarea id="resion" style="border:0 none #fff; width:100%;outline:none;" rows="4" placeholder="请输入外出事由(必填)"></textarea>
                     </li>
                     <li class="list-group-item" style="margin-bottom:10px;">
                         <div>
@@ -179,7 +183,8 @@
                 endYear: currYear + 10 //结束年份
             };
             var optDateTime = $.extend(opt['datetime'], opt['default']);
-            $("#startDate").mobiscroll(optDateTime).date(optDateTime);
+            $("#startDate").mobiscroll(optDateTime).time(optDateTime);
+            $("#endDate").mobiscroll(optDateTime).time(optDateTime);
         });
         /**
         调用设备获取图像
@@ -323,7 +328,7 @@
                 }
             }
         };
-        angular.module("Borrowing", []).controller("BorrowingController", ['$scope', '$http', function ($scope, $http) {
+        angular.module("AwayWork", []).controller("AwayController", ['$scope', '$http', function ($scope, $http) {
             /***************获取用户信息*****************/
             var param = sessionStorage.getItem("userinfor");
             if (param != null && param != "" && param != undefined) {
@@ -336,16 +341,13 @@
                     $("#other").val(itemArr.other);
                     $("#callcenterid").val(itemArr.callcenterid);
                     orgid = $("#callcenterid").val();
-                    //$http.post('/Borrowing/GetMemberList', { orgid: orgid, key: null }).success(function (response) {
-                    //    if (response) {
-                    //        $scope.items = response;
-                    //    }
-                    //});
+
                     $http.post('@Url.Action("GetDraft")', { orgeuid: orgid, euid: $("#createrid").val() }).success(function (response) {
                         if (response) {
-                            $("#loan").val(response.loan);
-                            $("#startDate").val(response.loanday);
-                            $("#resion").val(response.loanreson);
+                            $("#startDate").val(response.outstarttime);
+                            $("#endDate").val(response.outendtime);
+                            $("#days").val(response.outhours);
+                            $("#resion").val(response.outreason);
                             var arr = response.imgs;
                             if (arr.length > 0) {
                                 for (var i = 0; i < arr.length; i++) {
@@ -364,13 +366,14 @@
             }
             /****************获取用户信息结束***********/
             /**
-          *页面关闭事件
-          */
+  *页面关闭事件
+  */
             $scope.goback = function () {
                 if (confirm("是否要保存草稿？")) {
-                    var loan = $.trim($("#loan").val());
-                    var loanday = $.trim($("#startDate").val());
-                    var loanreson = $.trim($("#resion").val());
+                    var outstarttime = $.trim($("#startDate").val());
+                    var outendtime = $.trim($("#endDate").val());
+                    var outhours = $.trim($("#days").val());
+                    var outreason = $.trim($("#resion").val());
                     var imgs = new Array();
                     var arr = $("#annexlist").children("div");
                     if (arr.length > 0) {
@@ -388,9 +391,10 @@
                             orgeuid: $("#callcenterid").val(),
                             euid: $("#createrid").val(),
                             name: $("#createname").val(),
-                            loan: loan,
-                            loanday: loanday,
-                            loanreson: loanreson,
+                            outstarttime: outstarttime,
+                            outendtime: outendtime,
+                            outhours: outhours,
+                            outreason: outreason,
                             approvalList: approval,
                             copyto: copyto,
                             imgs: imgs
@@ -424,25 +428,6 @@
 
                 $("#memberModal").modal("hide");
             };
-            $scope.DelMember = function (euid, key) {
-                if (key == 0) {
-                    for (var i = 0; i < $scope.approval.length; i++) {
-                        if ($scope.approval[i].euid == euid) {
-                            $scope.approval.splice(i, 1);
-                            $("#approvalList").children(".yj:eq(" + i + ")").empty();
-                            break;
-                        }
-                    }
-                } else {
-                    for (var i = 0; i < $scope.copyto.length; i++) {
-                        if ($scope.copyto[i].euid == euid) {
-                            $scope.copyto.splice(i, 1);
-                            $("#copytoList").children(".yj:eq(" + i + ")").empty();
-                            break;
-                        }
-                    }
-                }
-            };
             /**
             显示联系人对话框
             */
@@ -459,6 +444,7 @@
                         selected.push(copyto[i].euid);
                     }
                 }
+
                 window.location.href = "UCall://selectContacts?para=" + JSON.stringify({
                     callback: 'AddMember',
                     displayMode: 0,
@@ -485,19 +471,28 @@
             提交表单
             */
             $scope.submit = function () {
-                var loan = $.trim($("#loan").val());
-                if (loan == "") {
-                    alert("请正确输入借款数额！");
+                var outstarttime = $.trim($("#startDate").val());
+                if (outstarttime == "") {
+                    alert("请正确输入开始日期！");
                     return;
                 }
-                var loanday = $.trim($("#startDate").val());
-                if (loanday == "") {
-                    alert("请正确领款日期！");
+                var outendtime = $.trim($("#endDate").val());
+                if (outendtime == "") {
+                    alert("请正确输入结束日期！");
                     return;
                 }
-                var loanreson = $.trim($("#resion").val());
-                if (loanreson == "") {
-                    alert("借款事由必需填写。");
+                var outhours = $.trim($("#days").val());
+                if (isNaN(parseFloat(outhours))) {
+                    alert("请正确输入时长！");
+                    return;
+                }
+                if (outhours > 24) {
+                    alert("请正确输入时长！");
+                    return;
+                }
+                var outreason = $.trim($("#resion").val());
+                if (outreason == "") {
+                    alert("外出事由必需填写。");
                     return;
                 }
                 if (approval.length == 0) {
@@ -521,9 +516,10 @@
                         orgeuid: $("#callcenterid").val(),
                         euid: $("#createrid").val(),
                         name: $("#createname").val(),
-                        loan: loan,
-                        loanday: loanday,
-                        loanreson: loanreson,
+                        outstarttime: outstarttime,
+                        outendtime: outendtime,
+                        outhours: outhours,
+                        outreason: outreason,
                         approvalList: approval,
                         copyto: copyto,
                         imgs: imgs

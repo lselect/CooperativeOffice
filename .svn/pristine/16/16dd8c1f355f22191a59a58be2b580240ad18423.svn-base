@@ -1,7 +1,7 @@
 ﻿
 @{
     Layout = null;
-    ViewBag.Tilte = "借款";
+    ViewBag.Tilte = "请假";
 }
 
 <!DOCTYPE html>
@@ -28,7 +28,7 @@
         }
     </script>
 </head>
-<body style="background-color:#f0eff4;" ng-app="Borrowing" ng-controller="BorrowingController">
+<body style="background-color:#f0eff4;" ng-app="OffWork" ng-controller="OffWorkController">
     <input type="hidden" id="createrid" name="createrid" value="" />
     <input type="hidden" id="createname" name="createname" value="" />
     <input type="hidden" id="phonenum" name="phonenum" value="" />
@@ -46,21 +46,35 @@
         </div>
         <div class="row" style="margin-left:0 !important; margin-right:0 !important;">
             <div class="col-xs-12" style="padding-right:0; padding-left:0 !important;">
-                <ul class="list-group" style="margin-bottom:-1px;">
-                    <li class="list-group-item">
-                        <label style="margin-right:16px;">借款金额</label>
-                        <div style="margin-left:16px; display:inline;">
-                            <input id="loan" type="number" min="0" step="0.1" style="border:0 none #fff; color:#97d1cc;outline:none; " placeholder="请填金额" />
+                <ul class="list-group">
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label>请假类型</label>
+                        <div style="float:right;">
+                            <input type="hidden" id="selectedType" value="" />
+                            <a href="#" data-toggle="modal" data-target="#typeModal">
+                                <span id="typeShow">请选择(必填)</span>
+                                <i class="glyphicon glyphicon-chevron-right" style="color:#d0d0d0;"></i>
+                            </a>
                         </div>
                     </li>
                     <li class="list-group-item">
-                        <label>领款日期</label>
+                        <label>开始时间</label>
                         <div style="margin-left:16px; display:inline;">
-                            <input id="startDate" type="text" readonly="" name="startDate" placeholder="领款日期" data-role="date" data-inline="true" />
+                            <input id="startDate" type="text" name="startDate" placeholder="请输入日期" data-role="date" data-inline="true" />
                         </div>
                     </li>
-                    <li class="list-group-item">
-                        <textarea id="resion" style="border:0 none #fff; width:100%;outline:none;color:#97d1cc; " rows="4" placeholder="请填写事由"></textarea>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label>结束时间</label>
+                        <div style="margin-left:16px; display:inline;">
+                            <input id="endDate" type="text" name="endDate" placeholder="请输入日期" data-role="date" data-inline="true" />
+                        </div>
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <label style="margin-right:16px;">请假天数</label>
+                        <input id="days" type="text" placeholder="请输入请假天数(必填)" />
+                    </li>
+                    <li class="list-group-item" style="margin-bottom:10px;">
+                        <textarea id="resion" style="width:100%; padding:3px;" rows="4" placeholder="请输入请假事由(必填)"></textarea>
                     </li>
                     <li class="list-group-item" style="margin-bottom:10px;">
                         <div>
@@ -111,6 +125,20 @@
             <img src="/Images/loading.gif" alt="" /><br><span ng-bind="loading_text">加载中</span>
         </div>
     </div>
+    <!-- Modal请假类型 -->
+    <div class="modal fade" id="typeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body" style="background-color:#f3f3f3; padding:0 !important;">
+                    <ul class="list-group" style="margin-bottom:-1px;">
+                        <li class="list-group-item" ng-repeat="item in offtype" ng-click="fillType($index)" ng-bind="item.name">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal联系人 -->
     <div class="modal fade" id="memberModal" tabindex="-1" role="dialog">
         <div class="modal-dialog">
@@ -180,6 +208,7 @@
             };
             var optDateTime = $.extend(opt['datetime'], opt['default']);
             $("#startDate").mobiscroll(optDateTime).date(optDateTime);
+            $("#endDate").mobiscroll(optDateTime).date(optDateTime);
         });
         /**
         调用设备获取图像
@@ -278,6 +307,7 @@
                 }
             }
         };
+
         function DelMember(euid, key) {
             if (key == 0) {
                 for (var i = 0; i < approval.length; i++) {
@@ -323,7 +353,9 @@
                 }
             }
         };
-        angular.module("Borrowing", []).controller("BorrowingController", ['$scope', '$http', function ($scope, $http) {
+
+        angular.module("OffWork", []).controller("OffWorkController", ['$scope', '$http', function ($scope, $http) {
+
             /***************获取用户信息*****************/
             var param = sessionStorage.getItem("userinfor");
             if (param != null && param != "" && param != undefined) {
@@ -336,16 +368,30 @@
                     $("#other").val(itemArr.other);
                     $("#callcenterid").val(itemArr.callcenterid);
                     orgid = $("#callcenterid").val();
-                    //$http.post('/Borrowing/GetMemberList', { orgid: orgid, key: null }).success(function (response) {
-                    //    if (response) {
-                    //        $scope.items = response;
-                    //    }
-                    //});
+                    $http.post('@Url.Action("GetMemberList")', { orgid: orgid, key: null }).success(function (response) {
+                        if (response) {
+                            $scope.items = response;
+                        }
+                    });
+                    $http.post('@Url.Action("GetOffWorkType")', {}).success(function (response) {
+                        if (response) {
+                            $scope.offtype = response;
+                        }
+                    });
                     $http.post('@Url.Action("GetDraft")', { orgeuid: orgid, euid: $("#createrid").val() }).success(function (response) {
                         if (response) {
-                            $("#loan").val(response.loan);
-                            $("#startDate").val(response.loanday);
-                            $("#resion").val(response.loanreson);
+                            $("#selectedType").val(response.leavetype);
+                            for (var i = 0; i < $scope.offtype.length; i++) {
+                                if ($scope.offtype[i].code == response.leavetype) {
+                                    $("#typeShow").html($scope.offtype[i].name);
+                                    break;
+                                }
+                            }
+                            $("#typeShow").html();
+                            $("#startDate").val(response.leavestarttime);
+                            $("#endDate").val(response.leaveendtime);
+                            $("#days").val(response.leavehours);
+                            $("#resion").val(response.leavereason);
                             var arr = response.imgs;
                             if (arr.length > 0) {
                                 for (var i = 0; i < arr.length; i++) {
@@ -363,14 +409,13 @@
                 }
             }
             /****************获取用户信息结束***********/
-            /**
-          *页面关闭事件
-          */
             $scope.goback = function () {
                 if (confirm("是否要保存草稿？")) {
-                    var loan = $.trim($("#loan").val());
-                    var loanday = $.trim($("#startDate").val());
-                    var loanreson = $.trim($("#resion").val());
+                    var leavetype = $("#selectedType").val();
+                    var leavestarttime = $.trim($("#startDate").val());
+                    var leaveendtime = $.trim($("#endDate").val());
+                    var leavehours = $.trim($("#days").val());
+                    var leavereason = $.trim($("#resion").val());
                     var imgs = new Array();
                     var arr = $("#annexlist").children("div");
                     if (arr.length > 0) {
@@ -388,9 +433,11 @@
                             orgeuid: $("#callcenterid").val(),
                             euid: $("#createrid").val(),
                             name: $("#createname").val(),
-                            loan: loan,
-                            loanday: loanday,
-                            loanreson: loanreson,
+                            leavetype: leavetype,
+                            leavestarttime: leavestarttime,
+                            leaveendtime: leaveendtime,
+                            leavehours: leavehours,
+                            leavereason: leavereason,
                             approvalList: approval,
                             copyto: copyto,
                             imgs: imgs
@@ -408,6 +455,14 @@
                 }
             };
             /**
+            填充请假事由
+            */
+            $scope.fillType = function ($index) {
+                $("#selectedType").val($scope.offtype[$index].code);
+                $("#typeShow").html($scope.offtype[$index].name);
+                $("#typeModal").modal("hide");
+            }
+            /**
             添加联系人
             */
             $scope.AddMember = function ($index) {
@@ -421,28 +476,9 @@
                     $(partial).appendTo("#copytoList");
                     copyto.push({ euid: $scope.items[$index].euid, name: $scope.items[$index].name });
                 }
-
                 $("#memberModal").modal("hide");
             };
-            $scope.DelMember = function (euid, key) {
-                if (key == 0) {
-                    for (var i = 0; i < $scope.approval.length; i++) {
-                        if ($scope.approval[i].euid == euid) {
-                            $scope.approval.splice(i, 1);
-                            $("#approvalList").children(".yj:eq(" + i + ")").empty();
-                            break;
-                        }
-                    }
-                } else {
-                    for (var i = 0; i < $scope.copyto.length; i++) {
-                        if ($scope.copyto[i].euid == euid) {
-                            $scope.copyto.splice(i, 1);
-                            $("#copytoList").children(".yj:eq(" + i + ")").empty();
-                            break;
-                        }
-                    }
-                }
-            };
+
             /**
             显示联系人对话框
             */
@@ -485,19 +521,29 @@
             提交表单
             */
             $scope.submit = function () {
-                var loan = $.trim($("#loan").val());
-                if (loan == "") {
-                    alert("请正确输入借款数额！");
+                var leavetype = $("#selectedType").val();
+                if (leavetype == "") {
+                    alert("请选择请假类型！");
                     return;
                 }
-                var loanday = $.trim($("#startDate").val());
-                if (loanday == "") {
-                    alert("请正确领款日期！");
+                var leavestarttime = $.trim($("#startDate").val());
+                if (leavestarttime == "") {
+                    alert("请正确输入请假开始日期！");
                     return;
                 }
-                var loanreson = $.trim($("#resion").val());
-                if (loanreson == "") {
-                    alert("借款事由必需填写。");
+                var leaveendtime = $.trim($("#endDate").val());
+                if (leaveendtime == "") {
+                    alert("请正确输入请假结束日期！");
+                    return;
+                }
+                var leavehours = $.trim($("#days").val());
+                if (isNaN(parseFloat(leavehours))) {
+                    alert("请正确输入请假天数！");
+                    return;
+                }
+                var leavereason = $.trim($("#resion").val());
+                if (leavereason == "") {
+                    alert("请假原因必需填写。");
                     return;
                 }
                 if (approval.length == 0) {
@@ -521,9 +567,11 @@
                         orgeuid: $("#callcenterid").val(),
                         euid: $("#createrid").val(),
                         name: $("#createname").val(),
-                        loan: loan,
-                        loanday: loanday,
-                        loanreson: loanreson,
+                        leavetype: leavetype,
+                        leavestarttime: leavestarttime,
+                        leaveendtime: leaveendtime,
+                        leavehours: leavehours,
+                        leavereason: leavereason,
                         approvalList: approval,
                         copyto: copyto,
                         imgs: imgs
@@ -539,8 +587,9 @@
                         }
                     },
                     error: function (e) {
-                        alert("保存失败！");
                         $("#masklayer").hide();
+                        alert("保存失败！");
+
                     }
                 });
             }
